@@ -1,0 +1,21 @@
+@font-face {
+  font-family: 'Silkscreen';
+  src: url('fonts/Silkscreen/Silkscreen-Regular.ttf') format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Silkscreen';
+  src: url('fonts/Silkscreen/Silkscreen-Bold.ttf') format('truetype');
+  font-weight: bold;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0.5rem;
+}
+
+h1 {
+  font-family: 'Silkscreen', sans-serif;
+  font-weight: bold;
+}
