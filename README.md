@@ -6,7 +6,7 @@ Repo for my personal website.
 I use [Deno](https://deno.com/) to run a local file server from the docs folder with the following command:
 
 ```
-deno run --allow-net --allow-read https://deno.land/std/http/file_server.ts docs/
+deno run --allow-net --allow-read --allow-sys https://deno.land/std/http/file_server.ts docs/
 ```
 
 ## Testing
