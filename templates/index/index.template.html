@@ -1,35 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="stylesheet" href="/style.css">
-  <link rel="stylesheet" href="/css/index.css">
-  <title>${title}</title>
-</head>
-<body>
-  <h1>Paolo Di Pasquale</h1>
-  <!-- <p>A place to elaborate my thoughts</p>
-  <p>Public thought elaboration</p>
-  <p>Public thought elaboration system</p>
-  <p>Public Thought Scrutiny Dimension</p>
-  <p>Elaborating thoughts in plain sight</p> -->
-  <p>Elaborating thoughts on the web</p>
-  <!-- <p>Elaborating thoughts in public</p> -->
-  <main>
-    ${#each posts}
-      <article>
-        <h2><a href="${url}">${title}</a></h2>
-        <time datetime="${date}">${date}</time>
-        <p>${excerpt} ${#if readMore} <a href="${url}">Read more</a> ${/if}</p>
-      </article>
-    ${/each}
-  </main>
-  <script type="module" src="/main.js"></script>
-  <script type="module" src="/js/index.js"></script>
-</body>
-</html>
+<link rel="stylesheet" href="/css/index.css">
+
+${posts}
+
+<script type="module" src="/js/index.js"></script>

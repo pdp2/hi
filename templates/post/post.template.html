@@ -1,31 +1,19 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
-  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
-  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
-  <link rel="manifest" href="/site.webmanifest">
-  <link rel="stylesheet" href="/style.css">
+
   <link rel="stylesheet" href="/css/post.css">
-  <title>${title}</title>
-</head>
-<body>
-  <h1>Paolo Di Pasquale</h1>
-  <!-- <p>A place to elaborate my thoughts</p>
-  <p>Public thought elaboration</p>
-  <p>Public thought elaboration system</p>
-  <p>Public Thought Scrutiny Dimension</p>
-  <p>Elaborating thoughts in plain sight</p> -->
-  <p>Elaborating thoughts on the web</p>
-  <!-- <p>Elaborating thoughts in public</p> -->
-  <main>
-    <h2>${formattedTitle}</h2>
+
+  <article>
+    <h2>${#if isIndex} 
+      <a href="${url}">${formattedTitle}</a>
+    ${else}
+      ${formattedTitle}
+    ${/if}
+    </h2>
     <time datetime="${date}">${friendlyDateTime}</time>
-    ${contents}
-  </main>
-  <script type="module" src="/main.js"></script>
+    ${#if isIndex} 
+      <p>${excerpt} ${#if readMore} <a href="${url}">Read more</a> ${/if}</p>
+    ${else}
+      ${contents}
+    ${/if}
+  </article>
+
   <script type="module" src="/js/post.js"></script>
-</body>
-</html>

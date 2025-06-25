@@ -9,8 +9,8 @@
   <link rel="manifest" href="/site.webmanifest">
   <link rel="stylesheet" href="/style.css">
   <link rel="stylesheet" href="/css/default-layout.css">
-  <link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="/css/post.css">
-  <title>Paolo Di Pasquale - Elaborating thoughts on the web</title>
+  ${styles}
+  <title>${title}</title>
 </head>
 <body>
   <h1 class="siteHeading"><a href="/">Paolo Di Pasquale</a></h1>
@@ -22,18 +22,9 @@
   <p class="tagline">Elaborating thoughts on the web</p>
   <!-- <p>Elaborating thoughts in public</p> -->
   <main>
-    <article>
-    <h2> 
-      <a href="/posts/testing-testing-is-this-thing-on.html">Testing, testing, is this thing on?</a>
-    
-    </h2>
-    <time datetime="2025-06-23T20:43Z">23/06/2025</time>
-     
-      <p><p>This is the first post in my new blog. I am writing into a MD file, which I will later need to convert into HTML for both the entry on the home page and the separate post page. When possible, I&#39;m going to use this as an opportunity to have...  <a href="/posts/testing-testing-is-this-thing-on.html">Read more</a> </p>
-    
-  </article>
+    ${main}
   </main>
   <script type="module" src="/main.js"></script>
-  <script type="module" src="/js/index.js"></script><script type="module" src="/js/post.js"></script>
+  ${scripts}
 </body>
 </html>
