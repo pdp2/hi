@@ -78,7 +78,7 @@ async function buildIndexFile(postsData, templateFile, layoutFile) {
     isIndex: true,
     excerpt: getExcerpt(data.contents),
     readMore: data.contents.length > EXCERPT_LENGTH,
-    url: `/posts/${data.fileName.replace('.md', '.html')}`,
+    url: `posts/${data.fileName.replace('.md', '.html')}`,
   }));
 
   const indexMainData = {
