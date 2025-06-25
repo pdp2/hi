@@ -1,75 +1,124 @@
 import { marked } from "npm:marked@^15.0.0";
 
-const POSTS_DIR = "./posts";
-const POSTS_OUTPUT_DIR = "./docs/posts";
-const POST_FILES = await Array.fromAsync(Deno.readDir(POSTS_DIR));
-const POST_FILE_NAMES = POST_FILES.map(entry => entry.name);
+// Index config
+const INDEX_OUTPUT_FILEPATH = "./docs/index.html";
+const INDEX_TEMPLATE_FILEPATH = "./templates/index/index.template.html";
+const INDEX_TEMPLATE_CSS_FILEPATH = "./templates/index/index.css";
+const INDEX_CSS_OUTPUT_FILEPATH = "./docs/css/index.css";
+const INDEX_TEMPLATE_JS_FILEPATH = "./templates/index/index.js";
+const INDEX_JS_OUTPUT_FILEPATH = "./docs/js/index.js";
 const EXCERPT_LENGTH = 250;
 
-const POST_TEMPLATE_FILE = await Deno.readTextFile("./templates/post/post.template.html");
-const POST_TEMPLATE_CSS_FILE = await Deno.readTextFile("./templates/post/post.css");
+// Posts config
+const POSTS_CONTENT_DIR = "./posts";
+const POSTS_OUTPUT_DIR = "./docs/posts";
+const POSTS_TEMPLATE_FILEPATH = "./templates/post/post.template.html";
+const POSTS_TEMPLATE_CSS_FILEPATH = "./templates/post/post.css";
 const POST_CSS_OUTPUT_FILEPATH = "./docs/css/post.css";
-const POST_TEMPLATE_JS_FILE = await Deno.readTextFile("./templates/post/post.js");
+const POST_TEMPLATE_JS_FILEPATH = "./templates/post/post.js";
 const POST_JS_OUTPUT_FILEPATH = "./docs/js/post.js";
 
+console.info('\n🔨 Building...')
 
-await Deno.writeTextFile(POST_CSS_OUTPUT_FILEPATH, POST_TEMPLATE_CSS_FILE);
-await Deno.writeTextFile(POST_JS_OUTPUT_FILEPATH, POST_TEMPLATE_JS_FILE);
+console.info('\n📖 Reading from', POSTS_CONTENT_DIR);
+const postFiles = await Array.fromAsync(Deno.readDir(POSTS_CONTENT_DIR));
+const postFileNames = postFiles.map(entry => entry.name);
+console.info('\n🔍 Found files:', postFileNames);
 
-const INDEX_TEMPLATE_FILE = await Deno.readTextFile("./templates/index/index.template.html");
-const INDEX_TEMPLATE_CSS_FILE = await Deno.readTextFile("./templates/index/index.css");
-const INDEX_CSS_OUTPUT_FILEPATH = "./docs/css/index.css";
-const INDEX_TEMPLATE_JS_FILE = await Deno.readTextFile("./templates/index/index.js");
-const INDEX_JS_OUTPUT_FILEPATH = "./docs/js/index.js";
+console.info('\n💾 Getting posts data...');
+const postsData = await getPostsData(postFileNames);
+console.info('\n🔍 Found posts data:', postsData);
 
+const indexTemplateFile = await Deno.readTextFile(INDEX_TEMPLATE_FILEPATH);
+await buildIndexFile(postsData, indexTemplateFile);
 
-await Deno.writeTextFile(INDEX_CSS_OUTPUT_FILEPATH, INDEX_TEMPLATE_CSS_FILE);
-await Deno.writeTextFile(INDEX_JS_OUTPUT_FILEPATH, INDEX_TEMPLATE_JS_FILE);
+const postTemplateFile = await Deno.readTextFile(POSTS_TEMPLATE_FILEPATH);
+await buildPostsFiles(postsData, postTemplateFile);
 
-console.info("Post file names:", POST_FILE_NAMES);
+console.info('\n🎉 Build successful 🎉\n');
 
-const POST_FILES_CONTENTS = await Array.fromAsync(
-  POST_FILE_NAMES.map(async (fileName) => {
-    const contents = await Deno.readTextFile(`${POSTS_DIR}/${fileName}`);
-    return {
-      contents: marked(contents.split(/---\n*/)[2]),
-      fileName,
-      title: contents.split("title: ")[1].split("\n")[0],
-      date: contents.split("date: ")[1].split("\n")[0],
-      friendlyDateTime: new Date(contents.split("date: ")[1].split("\n")[0]).toLocaleDateString(),
-      formattedTitle: contents.split("title: ")[1].split("\n")[0].split(" |")[0]
-    };
-  }),
-);
+async function buildIndexFile(postsData, templateFile) {
+  console.info('\n🔨 Building index file');
+  const indexData = {
+    title: "Paolo Di Pasquale - Elaborating thoughts on the web",
+    posts: postsData.map(post => ({
+      title: post.formattedTitle,
+      excerpt: getExcerpt(post.contents),
+      url: `/posts/${post.fileName.replace('.md', '.html')}`,
+      date: post.friendlyDateTime,
+      readMore: post.contents.length > EXCERPT_LENGTH
+    }))
+  };
 
-console.info("File contents:", POST_FILES_CONTENTS);
+  const indexHtml = parseTemplate(templateFile, indexData);
+  await Deno.writeTextFile(INDEX_OUTPUT_FILEPATH, indexHtml);
 
-let posts = [];
+  const indexTemplateCssFile = await Deno.readTextFile(INDEX_TEMPLATE_CSS_FILEPATH);
+  const indexTemplateJsFile = await Deno.readTextFile(INDEX_TEMPLATE_JS_FILEPATH);
 
-for (const content of POST_FILES_CONTENTS) {
-  const htmlFilePath = `${POSTS_OUTPUT_DIR}/${content.fileName.replace('.md', '.html')}`;
-  
-  const htmlContent = POST_TEMPLATE_FILE
-    .replaceAll("${title}", content.title)
-    .replaceAll("${date}", content.date)
-    .replaceAll("${friendlyDateTime}", content.friendlyDateTime)
-    .replaceAll("${contents}", content.contents)
-    .replaceAll("${formattedTitle}", content.formattedTitle);
-
-  await Deno.writeTextFile(htmlFilePath, htmlContent);
-  console.info(`Created HTML file: ${htmlFilePath}`);
-
-  posts.push({
-    title: content.title,
-    date: content.date,
-    friendlyDateTime: content.friendlyDateTime,
-    formattedTitle: content.formattedTitle,
-    contents: content.contents,
-    htmlFilePath: htmlFilePath
-  });
+  await Deno.writeTextFile(INDEX_CSS_OUTPUT_FILEPATH, indexTemplateCssFile);
+  await Deno.writeTextFile(INDEX_JS_OUTPUT_FILEPATH, indexTemplateJsFile);
+  console.info('\n💪 Created file:', INDEX_OUTPUT_FILEPATH);
 }
 
-// Add this function to handle template parsing
+async function buildPostsFiles(postsData, templateFile) {
+  console.info('\n🔨 Building posts files...')
+  for (const post of postsData) {
+    const postFilePath = `${POSTS_OUTPUT_DIR}/${post.fileName.replace('.md', '.html')}`;
+    
+    // TO DO: This can be set up in config
+    const postHtml = templateFile
+      .replaceAll("${title}", post.title)
+      .replaceAll("${date}", post.date)
+      .replaceAll("${friendlyDateTime}", post.friendlyDateTime)
+      .replaceAll("${contents}", post.contents)
+      .replaceAll("${formattedTitle}", post.formattedTitle);
+  
+    await Deno.writeTextFile(postFilePath, postHtml);
+    console.info('\n💪 Created file:', postFilePath);
+  }
+
+  const postTemplateCssFile = await Deno.readTextFile(POSTS_TEMPLATE_CSS_FILEPATH);
+  const postTemplateJsFile = await Deno.readTextFile(POST_TEMPLATE_JS_FILEPATH);
+
+  await Deno.writeTextFile(POST_CSS_OUTPUT_FILEPATH, postTemplateCssFile);
+  await Deno.writeTextFile(POST_JS_OUTPUT_FILEPATH, postTemplateJsFile);
+}
+
+function getExcerpt(contents) {
+  if (contents.length <= EXCERPT_LENGTH) {
+    return contents;
+  }
+  
+  // Find the last space before the excerpt length limit
+  const truncated = contents.substring(0, EXCERPT_LENGTH);
+  const lastSpaceIndex = truncated.lastIndexOf(' ');
+  
+  // If we found a space, cut there; otherwise, use the original limit
+  if (lastSpaceIndex > 0) {
+    return contents.substring(0, lastSpaceIndex) + '...';
+  }
+  
+  // Fallback to original behavior if no space found
+  return truncated + '...';
+}
+
+async function getPostsData(fileNames) {
+  return await Array.fromAsync(
+    fileNames.map(async (fileName) => {
+      const contents = await Deno.readTextFile(`${POSTS_CONTENT_DIR}/${fileName}`);
+      return {
+        contents: marked(contents.split(/---\n*/)[2]),
+        fileName,
+        title: contents.split("title: ")[1].split("\n")[0],
+        date: contents.split("date: ")[1].split("\n")[0],
+        friendlyDateTime: new Date(contents.split("date: ")[1].split("\n")[0]).toLocaleDateString(),
+        formattedTitle: contents.split("title: ")[1].split("\n")[0].split(" |")[0]
+      };
+    }),
+  );
+}
+
 function parseTemplate(template, data) {
   let result = template;
   
@@ -111,40 +160,3 @@ function parseTemplate(template, data) {
   
   return result;
 }
-
-// Replace the index generation part with:
-const indexData = {
-  title: "Paolo Di Pasquale - Elaborating thoughts on the web",
-  posts: posts.map(post => ({
-    title: post.formattedTitle,
-    excerpt: getExcerpt(post.contents),
-    url: `/posts/${post.htmlFilePath.split('/').pop()}`,
-    date: post.friendlyDateTime,
-    readMore: post.contents.length > EXCERPT_LENGTH
-  }))
-};
-
-const indexHtml = parseTemplate(INDEX_TEMPLATE_FILE, indexData);
-await Deno.writeTextFile("./docs/index.html", indexHtml);
-console.info("Created index.html");
-
-function getExcerpt(contents) {
-  if (contents.length <= EXCERPT_LENGTH) {
-    return contents;
-  }
-  
-  // Find the last space before the excerpt length limit
-  const truncated = contents.substring(0, EXCERPT_LENGTH);
-  const lastSpaceIndex = truncated.lastIndexOf(' ');
-  
-  // If we found a space, cut there; otherwise, use the original limit
-  if (lastSpaceIndex > 0) {
-    return contents.substring(0, lastSpaceIndex) + '...';
-  }
-  
-  // Fallback to original behavior if no space found
-  return truncated + '...';
-}
-
-
-
