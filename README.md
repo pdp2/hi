@@ -1,17 +1,29 @@
 # hi
 Repo for my personal website.
 
+## Pre-requisites for running locally
+
+- Installation of [Deno](https://deno.com/)
+
 ## Development
 
-I use [Deno](https://deno.com/) to run a local file server from the docs folder with the following command:
+Run a local file server from the `./docs` folder with this command:
 
 ```
-deno run --allow-net --allow-read --allow-sys https://deno.land/std/http/file_server.ts docs/
+deno run --allow-net --allow-read --allow-sys scripts/serve.js
 ```
+
+Most of the files in the `./docs` folder should not be edited directly as they are built using the files in the `./templates` and `./posts` folder. To build run:
+
+```
+deno run --allow-read --allow-write scripts/build.js
+```
+
+❗️ Remember this 👆 before pushing your changes otherwise it will not work...
 
 ## Testing
 
-To run the tests, install [Deno](https://deno.com/) and then run this command from the root of the project:
+To run the tests use this command from the root of the project:
 
 ```
 deno test
