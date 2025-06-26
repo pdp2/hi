@@ -8,10 +8,9 @@ const handler = (req) => {
   
   return serveDir(req, {
     fsRoot: "./docs", // Serve files from ./docs
-    urlRoot: "hi/", // Strip hi/ from requests
   });
 };
 
-console.log("🚀 Serving ./docs at http://localhost:8080/hi/");
+console.log("🚀 Serving ./docs at http://localhost:8080/");
 Deno.serve({ port: 8080 }, handler);
 
