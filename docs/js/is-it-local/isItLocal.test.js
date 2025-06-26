@@ -8,7 +8,7 @@ Deno.test("Returns true for hosts that are not pdp2.github.io", () => {
   exampleLocalHosts.forEach(host => assertEquals(isItLocal(host), true));
 });
 
-Deno.test("Returns false when host is pdp2.github.io", () => {
+Deno.test(`Returns false when host is ${REMOTE_HOST}`, () => {
   assertEquals(isItLocal(REMOTE_HOST), false);
 });
 
