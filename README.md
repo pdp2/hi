@@ -23,10 +23,10 @@ scripts/build
 
 ## Testing
 
-To run the tests use this command from the root of the project:
+To run the tests use this command:
 
 ```
-deno test
+scripts/test
 ```
 
 ## Deployment

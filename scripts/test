@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+# Check if deno is installed
+source "$(dirname "$0")/check-deno"
+
+echo -e "\n🧪 Running tests...\n"
+
+deno test
