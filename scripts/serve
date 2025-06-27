@@ -1,0 +1,6 @@
+#!/usr/bin/env bash
+
+# Check if deno is installed
+source "$(dirname "$0")/check-deno"
+
+deno run --allow-net --allow-read --allow-sys scripts/tasks/serve.js

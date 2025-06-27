@@ -11,6 +11,6 @@ const handler = (req) => {
   });
 };
 
-console.log("🚀 Serving ./docs at http://localhost:8080/");
+console.log("\n🚀 Serving ./docs at http://localhost:8080/\n");
 Deno.serve({ port: 8080 }, handler);
 

@@ -7,16 +7,16 @@ Repo for my personal website.
 
 ## Development
 
-Run a local file server from the `./docs` folder with this command:
+Run a local server serving files from the `./docs` folder by using this command in the terminal from the root of the project:
 
 ```
-deno run --allow-net --allow-read --allow-sys scripts/serve.js
+scripts/serve
 ```
 
 Most of the files in the `./docs` folder should not be edited directly as they are built using the files in the `./templates` and `./posts` folder. To build run:
 
 ```
-deno run --allow-read --allow-write scripts/build.js
+scripts/build
 ```
 
 ❗️ Remember this 👆 before pushing your changes otherwise it will not work...
