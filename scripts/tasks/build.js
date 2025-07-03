@@ -21,32 +21,37 @@ const POSTS_TEMPLATE_CSS_FILEPATH = "./templates/post/post.css";
 const POST_CSS_OUTPUT_FILEPATH = "./docs/css/post.css";
 const POST_TEMPLATE_JS_FILEPATH = "./templates/post/post.js";
 const POST_JS_OUTPUT_FILEPATH = "./docs/js/post.js";
+const AUTO_RUN_ARG = "--auto-run";
 
-console.info('\n🔨 Building...');
+if (Deno.args.includes(AUTO_RUN_ARG)) {
+  build();
+}
 
-console.info('\n📖 Reading from', POSTS_CONTENT_DIR);
-const postFiles = await Array.fromAsync(Deno.readDir(POSTS_CONTENT_DIR));
-const postFileNames = postFiles.map(entry => entry.name);
-console.info('\n🔍 Found files:', postFileNames);
-
-console.info('\n💾 Getting posts data...');
-const postsData = await getPostsData(postFileNames);
-console.info('\n🔍 Found posts data:', postsData);
-
-const postTemplateFile = await Deno.readTextFile(POSTS_TEMPLATE_FILEPATH);
-const postLayoutFile = await Deno.readTextFile(DEFAULT_LAYOUT_TEMPLATE_FILEPATH);
-await buildPostsFiles(postsData, postTemplateFile, postLayoutFile);
-await addPostStylesAndScripts();
-
-const indexTemplateFile = await Deno.readTextFile(INDEX_TEMPLATE_FILEPATH);
-const indexLayoutFile = await Deno.readTextFile(DEFAULT_LAYOUT_TEMPLATE_FILEPATH);
-await buildIndexFile(postsData, indexTemplateFile, indexLayoutFile);
-await addIndexStylesAndScripts();
-
-await addDefaultLayoutStyles();
-
-
-console.info('\n🎉 Build successful 🎉\n');
+export default async function build() {
+  console.info('\n🔨 Building...');
+  console.info('\n📖 Reading from', POSTS_CONTENT_DIR);
+  const postFiles = await Array.fromAsync(Deno.readDir(POSTS_CONTENT_DIR));
+  const postFileNames = postFiles.map(entry => entry.name);
+  console.info('\n🔍 Found files:', postFileNames);
+  
+  console.info('\n💾 Getting posts data...');
+  const postsData = await getPostsData(postFileNames);
+  console.info('\n🔍 Found posts data:', postsData);
+  
+  const postTemplateFile = await Deno.readTextFile(POSTS_TEMPLATE_FILEPATH);
+  const postLayoutFile = await Deno.readTextFile(DEFAULT_LAYOUT_TEMPLATE_FILEPATH);
+  await buildPostsFiles(postsData, postTemplateFile, postLayoutFile);
+  await addPostStylesAndScripts();
+  
+  const indexTemplateFile = await Deno.readTextFile(INDEX_TEMPLATE_FILEPATH);
+  const indexLayoutFile = await Deno.readTextFile(DEFAULT_LAYOUT_TEMPLATE_FILEPATH);
+  await buildIndexFile(postsData, indexTemplateFile, postTemplateFile, indexLayoutFile);
+  await addIndexStylesAndScripts();
+  
+  await addDefaultLayoutStyles();
+  
+  console.info(`\n🎉 Build completed at ${new Date().toISOString()} 🎉\n`);
+}
 
 async function addIndexStylesAndScripts() {
   const indexTemplateCssFile = await Deno.readTextFile(INDEX_TEMPLATE_CSS_FILEPATH);
@@ -70,10 +75,13 @@ async function addPostStylesAndScripts() {
   await Deno.writeTextFile(POST_JS_OUTPUT_FILEPATH, postTemplateJsFile);
 }
 
-async function buildIndexFile(postsData, templateFile, layoutFile) {
+async function buildIndexFile(postsData, indexTemplateFile, postTemplateFile, layoutFile) {
   console.info('\n🔨 Building index file');
 
-  const posts = postsData.map(data => parseTemplate(postTemplateFile, {
+  // Sort posts by date in reverse chronological order (newest first)
+  const sortedPostsData = postsData.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+  const posts = sortedPostsData.map(data => parseTemplate(postTemplateFile, {
     ...data,
     isIndex: true,
     excerpt: getExcerpt(data.contents),
@@ -85,7 +93,7 @@ async function buildIndexFile(postsData, templateFile, layoutFile) {
     posts: posts.map(p => p.html).join(""),
   };
 
-  const index = parseTemplate(templateFile, indexMainData);
+  const index = parseTemplate(indexTemplateFile, indexMainData);
 
   const indexLayoutData = {
     title: "Paolo Di Pasquale - Elaborating thoughts on the web",

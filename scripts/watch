@@ -3,4 +3,4 @@
 # Check if deno is installed
 source "$(dirname "$0")/check-deno"
 
-deno run --allow-read --allow-write scripts/tasks/build.js --auto-run
+deno run --allow-sys --allow-net --allow-read --allow-write scripts/tasks/watch.js
