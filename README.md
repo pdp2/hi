@@ -21,6 +21,14 @@ scripts/build
 
 ❗️ Remember this 👆 before pushing your changes otherwise it will not work...
 
+## Writing
+
+Run the watch script, which watches files in the `./posts` folder and triggers a build by running:
+
+```
+scripts/watch
+```
+
 ## Testing
 
 To run the tests use this command:
