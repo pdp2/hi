@@ -1,0 +1,13 @@
+#!/usr/bin/env bash
+set -e  # Exit immediately if any command exits with a non-zero status
+
+echo -e "Hello commit!\n"
+
+SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")/../../scripts"
+
+echo -e "\n $SCRIPT_DIR"
+
+source "$SCRIPT_DIR/test"
+source "$SCRIPT_DIR/build"
+
+exit 0;
