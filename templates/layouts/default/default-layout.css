@@ -1,8 +1,12 @@
 .siteHeading {
-  margin-bottom: 0;
+  font-family: 'Silkscreen', sans-serif;
+  font-weight: bold;
+  line-height: 1;
+  margin-bottom: 0.5rem;
 }
 
 .siteHeading a {
+  color: var(--heading-link);
   text-decoration: none;
 }
 
