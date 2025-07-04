@@ -1,3 +1,10 @@
+:root {
+  --main-bg: #ebf4fa;
+  --heading-link: #ff8900;
+  --tagline: #017d19;
+  --link: #0083fc;
+}
+
 @font-face {
   font-family: 'Silkscreen';
   src: url('fonts/Silkscreen/Silkscreen-Regular.ttf') format('truetype');
@@ -10,14 +17,28 @@
   font-weight: bold;
 }
 
+html {
+  background: var(--main-bg);
+  height: 100vh;
+}
+
 body {
   font-family: Arial, sans-serif;
   margin: 0 1rem;
   line-height: 1.5;
+  padding-bottom: 1rem;
 }
 
 h1 {
   font-family: 'Silkscreen', sans-serif;
   font-weight: bold;
   margin-bottom: 0;
+}
+
+h1 a {
+  color: var(--heading-link);
+}
+
+a {
+  color: var(--link);
 }
