@@ -156,7 +156,7 @@ async function getPostsData(fileNames) {
         fileName,
         title: contents.split("title: ")[1].split("\n")[0],
         date: contents.split("date: ")[1].split("\n")[0],
-        friendlyDateTime: new Date(contents.split("date: ")[1].split("\n")[0]).toLocaleDateString(),
+        friendlyDateTime: new Date(contents.split("date: ")[1].split("\n")[0]).toGMTString().split(' ').slice(0, 4).join(' '),
         formattedTitle: contents.split("title: ")[1].split("\n")[0].split(" |")[0]
       };
     }),
