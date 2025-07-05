@@ -1,3 +1,3 @@
-import isItLocal from "./js/is-it-local/isItLocal.js";
+import isItLocal from "./utils/is-it-local/isItLocal.js";
 
 document.title = isItLocal(window.location.hostname) ? '(local) ' + document.title : document.title;

@@ -1,8 +1,12 @@
 import { marked } from "npm:marked@^15.0.0";
+import * as path from "jsr:@std/path";
 
 const DEFAULT_LAYOUT_TEMPLATE_FILEPATH = "./templates/layouts/default/default-layout.template.html";
 const DEFAULT_LAYOUT_CSS_FILEPATH = "./templates/layouts/default/default-layout.css";
 const DEFAULT_LAYOUT_CSS_OUTPUT_FILEPATH = "./docs/css/default-layout.css";
+const DEFAULT_LAYOUT_JS_FILEPATH = "./templates/layouts/default/default-layout.js";
+const DEFAULT_LAYOUT_JS_OUTPUT_FILEPATH = "./docs/js/default-layout.js";
+
 
 // Index config
 const INDEX_OUTPUT_FILEPATH = "./docs/index.html";
@@ -64,7 +68,24 @@ async function addIndexStylesAndScripts() {
 async function addDefaultLayoutStyles() {
   const defaultTemplateCssFile = await Deno.readTextFile(DEFAULT_LAYOUT_CSS_FILEPATH);
   await Deno.writeTextFile(DEFAULT_LAYOUT_CSS_OUTPUT_FILEPATH, defaultTemplateCssFile);
+  
+  let defaultTemplateJsFile = await Deno.readTextFile(DEFAULT_LAYOUT_JS_FILEPATH);
 
+  // Include imported JS 
+  const importRegex = /import \S+ from "(.+)";/g;
+  const matches = [...defaultTemplateJsFile.matchAll(importRegex)];
+
+  for (const match of matches) {
+    const importPath = match[1];
+    let importedFile = await Deno.readTextFile(importPath);
+    const outputPath = path.normalize(`./docs/${importPath}`);
+    await Deno.mkdir(path.dirname(outputPath), { recursive: true });
+    await Deno.writeTextFile(outputPath, importedFile);
+  }
+
+  defaultTemplateJsFile = defaultTemplateJsFile.replace("/js", "");
+  
+  await Deno.writeTextFile(DEFAULT_LAYOUT_JS_OUTPUT_FILEPATH, defaultTemplateJsFile);
 }
 
 async function addPostStylesAndScripts() {
