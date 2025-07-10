@@ -1,6 +1,7 @@
 import { marked } from "npm:marked@^15.0.0";
 import * as path from "jsr:@std/path";
 
+// Default config
 const DEFAULT_LAYOUT_TEMPLATE_FILEPATH = "./templates/layouts/default/default-layout.template.html";
 const DEFAULT_LAYOUT_CSS_FILEPATH = "./templates/layouts/default/default-layout.css";
 const DEFAULT_LAYOUT_CSS_OUTPUT_FILEPATH = "./docs/css/default-layout.css";
