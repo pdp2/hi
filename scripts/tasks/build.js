@@ -1,6 +1,8 @@
 import { marked } from "npm:marked@^15.0.0";
 import * as path from "jsr:@std/path";
+import { getPostsData } from "../../utils/getPostsData.js";
 
+// Default config
 const DEFAULT_LAYOUT_TEMPLATE_FILEPATH = "./templates/layouts/default/default-layout.template.html";
 const DEFAULT_LAYOUT_CSS_FILEPATH = "./templates/layouts/default/default-layout.css";
 const DEFAULT_LAYOUT_CSS_OUTPUT_FILEPATH = "./docs/css/default-layout.css";
@@ -39,7 +41,7 @@ export default async function build() {
   console.info('\n🔍 Found files:', postFileNames);
   
   console.info('\n💾 Getting posts data...');
-  const postsData = await getPostsData(postFileNames);
+  const postsData = await getPostsData(postFileNames, POSTS_CONTENT_DIR);
   console.info('\n🔍 Found posts data:', postsData);
   
   const postTemplateFile = await Deno.readTextFile(POSTS_TEMPLATE_FILEPATH);
@@ -168,21 +170,6 @@ function getExcerpt(contents) {
   return truncated + '...';
 }
 
-async function getPostsData(fileNames) {
-  return await Array.fromAsync(
-    fileNames.map(async (fileName) => {
-      const contents = await Deno.readTextFile(`${POSTS_CONTENT_DIR}/${fileName}`);
-      return {
-        contents: marked(contents.split(/---\n*/)[2]),
-        fileName,
-        title: contents.split("title: ")[1].split("\n")[0],
-        date: contents.split("date: ")[1].split("\n")[0],
-        friendlyDateTime: new Date(contents.split("date: ")[1].split("\n")[0]).toGMTString().split(' ').slice(0, 4).join(' '),
-        formattedTitle: contents.split("title: ")[1].split("\n")[0].split(" |")[0]
-      };
-    }),
-  );
-}
 
 function parseTemplate(template, data, opts = {extractTags: true}) {
   let result = {
