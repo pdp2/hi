@@ -21,4 +21,21 @@ date: 1999-07-10T11:26Z
 ---
 ```
 
+From there, it's just regular markdown. I wrote a [build task](https://github.com/pdp2/hi/blob/e676a82f5251cda1b254d91baf9fb7ee3f7128be/scripts/tasks/build.js) that can be executed with Deno and provided [a bash script](https://github.com/pdp2/hi/blob/e676a82f5251cda1b254d91baf9fb7ee3f7128be/scripts/build) that runs it with the necessary permissions. That's one of the things I like about Deno. It doesn't let you read or write to the file system by default, you have to add the `--allow-read --allow-write` arguments to allow this.
+
+To view the changes, I run:
+
+```
+script/server
+
+🚀 Serving ./docs at http://localhost:8080/
+```
+
+Then I visit the URL above in my browser 🙌
+
+
+
+
+
+
 

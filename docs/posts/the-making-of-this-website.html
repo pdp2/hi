@@ -39,6 +39,13 @@
 <pre><code>title: Hello world! | Paolo Di Pasquale
 date: 1999-07-10T11:26Z
 </code></pre>
+<p>From there, it&#39;s just regular markdown. I wrote a <a href="https://github.com/pdp2/hi/blob/e676a82f5251cda1b254d91baf9fb7ee3f7128be/scripts/tasks/build.js">build task</a> that can be executed with Deno and provided <a href="https://github.com/pdp2/hi/blob/e676a82f5251cda1b254d91baf9fb7ee3f7128be/scripts/build">a bash script</a> that runs it with the necessary permissions. That&#39;s one of the things I like about Deno. It doesn&#39;t let you read or write to the file system by default, you have to add the <code>--allow-read --allow-write</code> arguments to allow this.</p>
+<p>To view the changes, I run:</p>
+<pre><code>script/server
+
+🚀 Serving ./docs at http://localhost:8080/
+</code></pre>
+<p>Then I visit the URL above in my browser 🙌</p>
 
     
   </article>
