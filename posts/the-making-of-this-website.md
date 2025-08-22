@@ -12,4 +12,13 @@ To start with I'll describe my current workflow for adding a new post. The first
   You will notice that GitHub links I provide include a specific commit SHA. I chose this way to guarantee that the file or folder I am pointing to actually exists. This would not be the same if I pointed to the main branch because it could get out of date, whereas I can guarantee that the reference existed at a specific commit.
 </aside>
 
+The MD file includes a section at the top which contains some metadata about the file and it looks like this:
+
+```
+---
+title: Hello world! | Paolo Di Pasquale
+date: 1999-07-10T11:26Z
+---
+```
+
 

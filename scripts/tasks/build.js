@@ -173,8 +173,9 @@ async function getPostsData(fileNames) {
   return await Array.fromAsync(
     fileNames.map(async (fileName) => {
       const contents = await Deno.readTextFile(`${POSTS_CONTENT_DIR}/${fileName}`);
+
       return {
-        contents: marked(contents.split(/---\n*/)[2]),
+        contents: marked(contents.split(/---\n*/).slice(2).join('')),
         fileName,
         title: contents.split("title: ")[1].split("\n")[0],
         date: contents.split("date: ")[1].split("\n")[0],
