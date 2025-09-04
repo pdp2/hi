@@ -1,6 +1,7 @@
 import { marked } from "npm:marked@^15.0.0";
 import * as path from "jsr:@std/path";
 
+// Default config
 const DEFAULT_LAYOUT_TEMPLATE_FILEPATH = "./templates/layouts/default/default-layout.template.html";
 const DEFAULT_LAYOUT_CSS_FILEPATH = "./templates/layouts/default/default-layout.css";
 const DEFAULT_LAYOUT_CSS_OUTPUT_FILEPATH = "./docs/css/default-layout.css";
@@ -172,8 +173,9 @@ async function getPostsData(fileNames) {
   return await Array.fromAsync(
     fileNames.map(async (fileName) => {
       const contents = await Deno.readTextFile(`${POSTS_CONTENT_DIR}/${fileName}`);
+
       return {
-        contents: marked(contents.split(/---\n*/)[2]),
+        contents: marked(contents.split(/---\n*/).slice(2).join('')),
         fileName,
         title: contents.split("title: ")[1].split("\n")[0],
         date: contents.split("date: ")[1].split("\n")[0],
