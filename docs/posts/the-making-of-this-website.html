@@ -28,8 +28,8 @@
     </h2>
     <time datetime="2025-07-10T11:26Z">Thu, 10 Jul 2025</time>
     
-      <p>Part of the idea of making my own website and using it as an opportunity to create my own tools for doing it, was also so that I could write about it. I am now in a position where I can add a MD file to the posts folder, run the build script and have it generate the HTML for the pages. I think this is a good point to reflect on what I have done so far.</p>
-<p>Before I get stuck in, I just wanted to mention the unescapable topic that is AI. As an engineer I have found it interesting to use tools such as <a href="https://cursor.com/en">Cursor</a> and <a href="https://www.warp.dev/">Warp</a>. I have learned so much using them and I have found that the conversational approach to learning has really helped me clarify certain concepts that I was trying to grasp. It&#39;s probably something that deserves its own dedicated post, but I just wanted to mention that I have leaned on these tools, particularly for writing the scripts to build and serve the website locally. The reason I mention it is because I have actually found that it encourages me to do more rather than less. Where in the past I may have thought, I&#39;ll pick a library to acheive something, I&#39;m finding that I give it a go myself, which is why I guess I&#39;m trying to build a SSG in the first place. </p>
+      <p>Part of the idea for making my own website was to use it as an opportunity to create my own tools for doing it, and also so I could write about it. I am now in a position where I can add a MD file to the posts folder, run the build script and have it generate the HTML for the pages. I think this is a good point to reflect on what I have done so far.</p>
+<p>Before I get stuck in, I just wanted to mention the unescapable topic that is AI. As an engineer I have found it interesting to use tools such as <a href="https://cursor.com/en">Cursor</a> and <a href="https://www.warp.dev/">Warp</a>. I have learned so much using them and I have found that the conversational approach to learning has really helped me clarify certain concepts that I was trying to grasp. It&#39;s probably something that deserves its own dedicated post, but I just wanted to mention that I have leaned on these tools, particularly for writing the scripts to build and serve the website locally. I have actually found that it encourages me to write more code rather than less. Where in the past I may have thought, I&#39;ll pick a library to acheive something, I&#39;m thinking &quot;I can give it a go myself!&quot;. I guess that&#39;s why I&#39;m trying to build a SSG in the first place 😅.</p>
 <p>To start with I&#39;ll describe my current workflow for adding a new post. The first step is to create a MD file in the <a href="https://github.com/pdp2/hi/tree/e676a82f5251cda1b254d91baf9fb7ee3f7128be/posts">posts directory</a>.</p>
 <aside data-type="note">
   You will notice that GitHub links I provide include a specific commit SHA. I chose this way to guarantee that the file or folder I am pointing to actually exists. This would not be the same if I pointed to the main branch because it could get out of date, whereas I can guarantee that the reference existed at a specific commit.
@@ -39,13 +39,20 @@
 <pre><code>title: Hello world! | Paolo Di Pasquale
 date: 1999-07-10T11:26Z
 </code></pre>
-<p>From there, it&#39;s just regular markdown. I wrote a <a href="https://github.com/pdp2/hi/blob/e676a82f5251cda1b254d91baf9fb7ee3f7128be/scripts/tasks/build.js">build task</a> that can be executed with Deno and provided <a href="https://github.com/pdp2/hi/blob/e676a82f5251cda1b254d91baf9fb7ee3f7128be/scripts/build">a bash script</a> that runs it with the necessary permissions. That&#39;s one of the things I like about Deno. It doesn&#39;t let you read or write to the file system by default, you have to add the <code>--allow-read --allow-write</code> arguments to allow this.</p>
-<p>To view the changes, I run:</p>
-<pre><code>script/server
+<p>From there, it&#39;s just regular markdown. I wrote a <a href="https://github.com/pdp2/hi/blob/e676a82f5251cda1b254d91baf9fb7ee3f7128be/scripts/tasks/build.js">build task</a> and a <a href="https://github.com/pdp2/hi/blob/e676a82f5251cda1b254d91baf9fb7ee3f7128be/scripts/tasks/watch.js">watch task</a> that can be executed with Deno and a bash script for both (<a href="https://github.com/pdp2/hi/blob/e676a82f5251cda1b254d91baf9fb7ee3f7128be/scripts/build">build</a> and <a href="https://github.com/pdp2/hi/blob/e676a82f5251cda1b254d91baf9fb7ee3f7128be/scripts/watch">watch</a>) that run with the necessary permissions. That&#39;s one of the things I like about Deno. It has security built in and it doesn&#39;t let you read or write to the file system by default, you have to add the <code>--allow-read --allow-write</code> arguments to allow this.</p>
+<p>To view the changes, I run both those scripts concurrently with:</p>
+<pre><code>scripts/serve &amp; scripts/watch
+[1] 82561
 
 🚀 Serving ./docs at http://localhost:8080/
+
+Listening on http://0.0.0.0:8080/
+
+🔍 Watching for changes...
 </code></pre>
-<p>Then I visit the URL above in my browser 🙌</p>
+<p>Then visit the URL above in my browser 🙌</p>
+<p>Once I&#39;m happy with the changes, I can merge into the <code>main</code> branch and this triggers a deployment to GitHub pages.</p>
+<p>In a future post I might expand on the build task and how the files are generated in the docs folder (which is what GitHub serves), but I&#39;ve had this branch open for a while now and I want to write about something else for a bit.</p>
 
     
   </article>
