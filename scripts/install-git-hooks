@@ -1,0 +1,8 @@
+#!/usr/bin/env bash
+
+echo -e "\n📦 Installing git hooks..."
+
+cp git-hooks/pre-commit .git/hooks/pre-commit
+chmod +x .git/hooks/pre-commit
+
+echo -e "\n✅ Git hooks installed successfully!"
