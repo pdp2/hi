@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 set -e  # Exit immediately if any command exits with a non-zero status
 
-echo -e "Hello commit!\n"
+echo -e "🤠 So you wanna commit huh cowboy!?"
 
-SCRIPT_DIR="$(dirname "${BASH_SOURCE[0]}")/../../scripts"
+# Get the git repository root directory
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+SCRIPT_DIR="$REPO_ROOT/scripts"
 
-echo -e "\n $SCRIPT_DIR"
-
-source "$SCRIPT_DIR/test"
-source "$SCRIPT_DIR/build"
+# Check if there are staged changes to relevant files
+if git diff --cached --name-only | grep -E '\.(js|ts)$' > /dev/null; then
+    source "$SCRIPT_DIR/test"
+else
+    echo -e "\nNo relevant files changed, skipping tests.\n"
+fi
 
 exit 0;

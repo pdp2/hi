@@ -4,6 +4,7 @@ Repo for my personal website.
 ## Pre-requisites for running locally
 
 - Installation of [Deno](https://deno.com/)
+- Run `scripts/install-git-hooks` to install git hooks
 
 ## Development
 
@@ -27,6 +28,12 @@ Run the watch script, which watches files in the `./posts` folder and triggers a
 
 ```
 scripts/watch
+```
+
+You can run both the build and watch scripts concurrently with:
+
+```
+scripts/serve & scripts/watch
 ```
 
 ## Testing
