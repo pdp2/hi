@@ -11,3 +11,8 @@ article {
   padding: 0 1rem;
   --shadow-color: 204deg 19% 67%;
 }
+
+.video-embed {
+  display: flex;
+  justify-content: center;
+}
