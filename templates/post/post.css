@@ -16,3 +16,9 @@ article {
   display: flex;
   justify-content: center;
 }
+
+.video-embed iframe {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+}
