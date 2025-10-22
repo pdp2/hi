@@ -12,6 +12,23 @@ article {
   --shadow-color: 204deg 19% 67%;
 }
 
+table {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+table td {
+  border: 1px solid #e2e8f0;
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+table td:has(del) {
+  background-color: rgb(128 128 128 / 50%);
+  color: rgb(128 128 128);
+  border-color: rgb(128 128 128);
+}
+
 .video-embed {
   display: flex;
   justify-content: center;
