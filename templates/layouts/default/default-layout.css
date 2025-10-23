@@ -46,6 +46,10 @@ aside::before {
   font-weight: bold;
 }
 
+img {
+  max-width: 100%;
+}
+
 .siteHeading {
   font-family: 'Silkscreen', sans-serif;
   font-weight: bold;
