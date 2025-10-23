@@ -11,7 +11,12 @@ I don't recall the specific search term I used, but it must have been related to
 
 It's easy to fall into a spiral of consuming productivity videos on YouTube resulting in being ironically unproductive. To avoid this, I decided to write a post to capture some learnings. The main takeaway was the concept of **ideas**, **tasks** and **projects**. I find this useful because it provides a way to determine if something is ready to work on, in other words, if it's a task.
 
-<div class="table-container">
+<div style="text-align: center;">
+
+![alt text](/images/ideas-tasks-projects-diagram.png "Title")
+
+</div>
+<!-- <div class="table-container">
 
 |  |  |  |  |  |
 |--------|--------|--------|--------|--------|
@@ -19,4 +24,4 @@ It's easy to fall into a spiral of consuming productivity videos on YouTube resu
 | 1 Observable Outcome | 1 Owner | 1 Deadline | 1 ~~Session~~ | 🏗️ **Project** |
 | 1 Observable Outcome | 1 ~~Owner~~ | 1 ~~Deadline~~ | 1 ~~Session~~ | 💡 **Idea** |  
 
-</div>
+</div> -->
