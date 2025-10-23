@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+# Check if deno is installed
+source "$(dirname "$0")/check-deno"
+
+# Check if argument was provided
+if [ $# -eq 0 ]; then
+    echo "Error: No argument provided. Please provide a post title." >&2
+    exit 1
+fi
+
+# Check if argument is a non-empty string
+if [ -z "$1" ]; then
+    echo "Error: Argument cannot be empty string." >&2
+    exit 1
+fi
+
+deno run --allow-net --allow-read --allow-write --allow-sys scripts/tasks/new-post.js "$1"
