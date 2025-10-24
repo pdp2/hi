@@ -137,7 +137,7 @@ async function buildIndexFile(postsData, indexTemplateFile, postTemplateFile, la
     scripts: index.scripts + posts[0].scripts,
   }
 
-  const indexLayout = parseTemplate(layoutFile, indexLayoutData, { extractTags: false });
+  const indexLayout = parseTemplate(layoutFile, indexLayoutData, { extractStyleAndScriptTags: false });
 
   await Deno.writeTextFile(INDEX_OUTPUT_FILEPATH, indexLayout.html);
   console.info('\n💪 Created file:', INDEX_OUTPUT_FILEPATH);
@@ -156,7 +156,7 @@ async function buildPostsFiles(postsData, templateFile, layoutFile) {
       scripts: post.scripts,
     }
 
-    const postLayout = parseTemplate(layoutFile, postLayoutData, { extractTags: false }); 
+    const postLayout = parseTemplate(layoutFile, postLayoutData, { extractStyleAndScriptTags: false }); 
     const postFilePath = `${POSTS_OUTPUT_DIR}/${postItem.fileName.replace('.md', '.html')}`;
 
     await Deno.writeTextFile(postFilePath, postLayout.html);
@@ -199,59 +199,36 @@ async function getPostsData(fileNames) {
   );
 }
 
-// To do: This entire function feels a bit confusing. Refactor at some point.
-function parseTemplate(template, data, opts = {extractTags: true}) {
+function parseTemplate(template, data, opts = {extractStyleAndScriptTags: true}) {
   let result = {
     html: template,
     styles: null,
     scripts: null,
   };
 
-  if (opts.extractTags) {
-    const linkRegex = /<link[^>]*rel="stylesheet"[^>]*>/g;
+  /* 
+    This option is used for the first parse before sending data 
+    to parse with the layout file.
+  */
+  if (opts.extractStyleAndScriptTags) {
+    const linkRegex = /<link\s+rel="stylesheet"\s+href="[^"]+"\s*>/g;
     const linkElements = result.html.match(linkRegex) || [];
     result.html = result.html.replace(linkRegex, '').trim();
     result.styles = linkElements.join('\n ');
 
-    const scriptRegex = /<script[^>]*>[\s\S]*?<\/script>/g;
+    const scriptRegex = /<script[^>]*>[^<]*<\/script>/g;
     const scriptElements = result.html.match(scriptRegex) || [];
     result.html = result.html.replace(scriptRegex, '').trim();
     result.scripts = scriptElements.join('\n ');
   }
-  
-  // Handle loops first (before simple replacements)
-  const loopRegex = /\$\{#each\s+(\w+)\}([\s\S]*?)\$\{\/each\}/g;
-  
-  result.html = result.html.replace(loopRegex, (match, arrayName, loopContent) => {
-    const array = data[arrayName];
-    if (!Array.isArray(array)) {
-      console.warn(`\n⚠️  Warning: ${arrayName} is not an array or doesn't exist`);
-      return '';
-    }
-    
-    return array.map(item => {
-      let itemContent = loopContent;
 
-      // Handle conditionals within loops (updated to support if-else)
-      const loopIfElseRegex = /\$\{#if\s+(\w+)\}([\s\S]*?)(?:\$\{else\}([\s\S]*?))?\$\{\/if\}/g;
-      itemContent = itemContent.replace(loopIfElseRegex, (ifMatch, variableName, ifContent, elseContent) => {
-        return item[variableName] ? ifContent : (elseContent || '');
-      });
-
-      // Replace variables within the loop context
-      Object.keys(item).forEach(key => {
-        const regex = new RegExp(`\\$\\{${key}\\}`, 'g');
-        itemContent = itemContent.replace(regex, item[key] || '');
-      });
-      return itemContent;
-    }).join('');
-  });
-
-  // Handle standalone conditionals with if-else support (including nested ones)
-  // Process from innermost to outermost by finding the deepest nesting first
+  /* Handle conditionals (including nested ones).
+    Process from innermost to outermost by finding the deepest nesting first.
+  */
   let hasConditionals = true;
   while (hasConditionals) {
     const conditionalRegex = /\$\{#if\s+(\w+)\}((?:(?!\$\{#if\s+\w+\})[\s\S])*?)(?:\$\{else\}((?:(?!\$\{#if\s+\w+\})[\s\S])*?))?\$\{\/if\}/g;
+    // To do: do we need to make an array here?
     const matches = Array.from(result.html.matchAll(conditionalRegex));
     
     if (matches.length === 0) {
@@ -265,10 +242,8 @@ function parseTemplate(template, data, opts = {extractTags: true}) {
   
   // Handle simple variable replacements
   Object.keys(data).forEach(key => {
-    if (!Array.isArray(data[key])) { // Skip arrays (already handled above)
-      const regex = new RegExp(`\\$\\{${key}\\}`, 'g');
-      result.html = result.html.replace(regex, data[key] || '');
-    }
+    const regex = new RegExp(`\\$\\{${key}\\}`, 'g');
+    result.html = result.html.replace(regex, data[key] || '');
   });
   
   return result;
