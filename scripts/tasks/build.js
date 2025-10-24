@@ -26,6 +26,7 @@ const POSTS_TEMPLATE_CSS_FILEPATH = "./templates/post/post.css";
 const POST_CSS_OUTPUT_FILEPATH = "./docs/css/post.css";
 const POST_TEMPLATE_JS_FILEPATH = "./templates/post/post.js";
 const POST_JS_OUTPUT_FILEPATH = "./docs/js/post.js";
+
 const AUTO_RUN_ARG = "--auto-run";
 
 if (Deno.args.includes(AUTO_RUN_ARG)) {
@@ -33,6 +34,7 @@ if (Deno.args.includes(AUTO_RUN_ARG)) {
 }
 
 export default async function build() {
+  // To do: create a loggin function so that we can toggle verbose mode
   console.info('\n🔨 Building...');
   console.info('\n📖 Reading from', POSTS_CONTENT_DIR);
   const postFiles = await Array.fromAsync(Deno.readDir(POSTS_CONTENT_DIR));
@@ -53,20 +55,12 @@ export default async function build() {
   await buildIndexFile(postsData, indexTemplateFile, postTemplateFile, indexLayoutFile);
   await addIndexStylesAndScripts();
   
-  await addDefaultLayoutStyles();
+  await addDefaultLayoutStylesAndScripts();
   
   console.info(`\n🎉 Build completed at ${new Date().toISOString()} 🎉\n`);
 }
 
-async function addIndexStylesAndScripts() {
-  const indexTemplateCssFile = await Deno.readTextFile(INDEX_TEMPLATE_CSS_FILEPATH);
-  const indexTemplateJsFile = await Deno.readTextFile(INDEX_TEMPLATE_JS_FILEPATH);
-
-  await Deno.writeTextFile(INDEX_CSS_OUTPUT_FILEPATH, indexTemplateCssFile);
-  await Deno.writeTextFile(INDEX_JS_OUTPUT_FILEPATH, indexTemplateJsFile);
-}
-
-async function addDefaultLayoutStyles() {
+async function addDefaultLayoutStylesAndScripts() {
   const defaultTemplateCssFile = await Deno.readTextFile(DEFAULT_LAYOUT_CSS_FILEPATH);
   await Deno.writeTextFile(DEFAULT_LAYOUT_CSS_OUTPUT_FILEPATH, defaultTemplateCssFile);
   
@@ -89,9 +83,25 @@ async function addDefaultLayoutStyles() {
   await Deno.writeTextFile(DEFAULT_LAYOUT_JS_OUTPUT_FILEPATH, defaultTemplateJsFile);
 }
 
+async function addIndexStylesAndScripts() {
+  const indexTemplateCssFile = await Deno.readTextFile(INDEX_TEMPLATE_CSS_FILEPATH);
+  const indexTemplateJsFile = await Deno.readTextFile(INDEX_TEMPLATE_JS_FILEPATH);
+
+  /* To do: If the index template JS file has imports we probably need to do the same thing as the 
+    addDefaultLayoutStylesAndScripts function.
+  */
+
+  await Deno.writeTextFile(INDEX_CSS_OUTPUT_FILEPATH, indexTemplateCssFile);
+  await Deno.writeTextFile(INDEX_JS_OUTPUT_FILEPATH, indexTemplateJsFile);
+}
+
 async function addPostStylesAndScripts() {
   const postTemplateCssFile = await Deno.readTextFile(POSTS_TEMPLATE_CSS_FILEPATH);
   const postTemplateJsFile = await Deno.readTextFile(POST_TEMPLATE_JS_FILEPATH);
+
+  /* To do: If the post template JS file has imports we probably need to do the same thing as the 
+    addDefaultLayoutStylesAndScripts function.
+  */
 
   await Deno.writeTextFile(POST_CSS_OUTPUT_FILEPATH, postTemplateCssFile);
   await Deno.writeTextFile(POST_JS_OUTPUT_FILEPATH, postTemplateJsFile);
@@ -115,12 +125,15 @@ async function buildIndexFile(postsData, indexTemplateFile, postTemplateFile, la
     posts: posts.map(p => p.html).join(""),
   };
 
+  /* To do: fix parseTemplate returns styles and scripts for each post, which is a waste.
+    That's why index.styles + posts[0].styles is used, accessing the first item in posts.
+  */
   const index = parseTemplate(indexTemplateFile, indexMainData);
 
   const indexLayoutData = {
     title: "Paolo Di Pasquale - Elaborating thoughts on the web",
     main: index.html,
-    styles: index.styles + posts[0].styles, // To do: fix parseTemplate returns styles and scripts for each post, which is a waste
+    styles: index.styles + posts[0].styles,
     scripts: index.scripts + posts[0].scripts,
   }
 
@@ -186,6 +199,7 @@ async function getPostsData(fileNames) {
   );
 }
 
+// To do: This entire function feels a bit confusing. Refactor at some point.
 function parseTemplate(template, data, opts = {extractTags: true}) {
   let result = {
     html: template,
