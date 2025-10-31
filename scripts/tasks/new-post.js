@@ -40,7 +40,7 @@ Write your post content here...
 
 await Deno.writeTextFile(filepath, content);
 
-console.log(`✅ Created new post: ${filepath}`);
-console.log(`📝 Title: ${postTitle}`);
+console.log(`✅ Created new post: ${filepath}\n`);
+console.log(`📝 Title: ${postTitle}\n`);
 console.log(`📅 Date: ${date}`);
 
