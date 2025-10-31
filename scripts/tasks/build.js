@@ -26,6 +26,7 @@ const POSTS_TEMPLATE_CSS_FILEPATH = "./templates/post/post.css";
 const POST_CSS_OUTPUT_FILEPATH = "./docs/css/post.css";
 const POST_TEMPLATE_JS_FILEPATH = "./templates/post/post.js";
 const POST_JS_OUTPUT_FILEPATH = "./docs/js/post.js";
+
 const AUTO_RUN_ARG = "--auto-run";
 
 if (Deno.args.includes(AUTO_RUN_ARG)) {
@@ -33,6 +34,7 @@ if (Deno.args.includes(AUTO_RUN_ARG)) {
 }
 
 export default async function build() {
+  // To do: create a loggin function so that we can toggle verbose mode
   console.info('\n🔨 Building...');
   console.info('\n📖 Reading from', POSTS_CONTENT_DIR);
   const postFiles = await Array.fromAsync(Deno.readDir(POSTS_CONTENT_DIR));
@@ -53,20 +55,12 @@ export default async function build() {
   await buildIndexFile(postsData, indexTemplateFile, postTemplateFile, indexLayoutFile);
   await addIndexStylesAndScripts();
   
-  await addDefaultLayoutStyles();
+  await addDefaultLayoutStylesAndScripts();
   
   console.info(`\n🎉 Build completed at ${new Date().toISOString()} 🎉\n`);
 }
 
-async function addIndexStylesAndScripts() {
-  const indexTemplateCssFile = await Deno.readTextFile(INDEX_TEMPLATE_CSS_FILEPATH);
-  const indexTemplateJsFile = await Deno.readTextFile(INDEX_TEMPLATE_JS_FILEPATH);
-
-  await Deno.writeTextFile(INDEX_CSS_OUTPUT_FILEPATH, indexTemplateCssFile);
-  await Deno.writeTextFile(INDEX_JS_OUTPUT_FILEPATH, indexTemplateJsFile);
-}
-
-async function addDefaultLayoutStyles() {
+async function addDefaultLayoutStylesAndScripts() {
   const defaultTemplateCssFile = await Deno.readTextFile(DEFAULT_LAYOUT_CSS_FILEPATH);
   await Deno.writeTextFile(DEFAULT_LAYOUT_CSS_OUTPUT_FILEPATH, defaultTemplateCssFile);
   
@@ -89,9 +83,25 @@ async function addDefaultLayoutStyles() {
   await Deno.writeTextFile(DEFAULT_LAYOUT_JS_OUTPUT_FILEPATH, defaultTemplateJsFile);
 }
 
+async function addIndexStylesAndScripts() {
+  const indexTemplateCssFile = await Deno.readTextFile(INDEX_TEMPLATE_CSS_FILEPATH);
+  const indexTemplateJsFile = await Deno.readTextFile(INDEX_TEMPLATE_JS_FILEPATH);
+
+  /* To do: If the index template JS file has imports we probably need to do the same thing as the 
+    addDefaultLayoutStylesAndScripts function.
+  */
+
+  await Deno.writeTextFile(INDEX_CSS_OUTPUT_FILEPATH, indexTemplateCssFile);
+  await Deno.writeTextFile(INDEX_JS_OUTPUT_FILEPATH, indexTemplateJsFile);
+}
+
 async function addPostStylesAndScripts() {
   const postTemplateCssFile = await Deno.readTextFile(POSTS_TEMPLATE_CSS_FILEPATH);
   const postTemplateJsFile = await Deno.readTextFile(POST_TEMPLATE_JS_FILEPATH);
+
+  /* To do: If the post template JS file has imports we probably need to do the same thing as the 
+    addDefaultLayoutStylesAndScripts function.
+  */
 
   await Deno.writeTextFile(POST_CSS_OUTPUT_FILEPATH, postTemplateCssFile);
   await Deno.writeTextFile(POST_JS_OUTPUT_FILEPATH, postTemplateJsFile);
@@ -115,16 +125,19 @@ async function buildIndexFile(postsData, indexTemplateFile, postTemplateFile, la
     posts: posts.map(p => p.html).join(""),
   };
 
+  /* To do: fix parseTemplate returns styles and scripts for each post, which is a waste.
+    That's why index.styles + posts[0].styles is used, accessing the first item in posts.
+  */
   const index = parseTemplate(indexTemplateFile, indexMainData);
 
   const indexLayoutData = {
     title: "Paolo Di Pasquale - Elaborating thoughts on the web",
     main: index.html,
-    styles: index.styles + posts[0].styles, // To do: fix parseTemplate returns styles and scripts for each post, which is a waste
+    styles: index.styles + posts[0].styles,
     scripts: index.scripts + posts[0].scripts,
   }
 
-  const indexLayout = parseTemplate(layoutFile, indexLayoutData, { extractTags: false });
+  const indexLayout = parseTemplate(layoutFile, indexLayoutData, { extractStyleAndScriptTags: false });
 
   await Deno.writeTextFile(INDEX_OUTPUT_FILEPATH, indexLayout.html);
   console.info('\n💪 Created file:', INDEX_OUTPUT_FILEPATH);
@@ -143,7 +156,7 @@ async function buildPostsFiles(postsData, templateFile, layoutFile) {
       scripts: post.scripts,
     }
 
-    const postLayout = parseTemplate(layoutFile, postLayoutData, { extractTags: false }); 
+    const postLayout = parseTemplate(layoutFile, postLayoutData, { extractStyleAndScriptTags: false }); 
     const postFilePath = `${POSTS_OUTPUT_DIR}/${postItem.fileName.replace('.md', '.html')}`;
 
     await Deno.writeTextFile(postFilePath, postLayout.html);
@@ -186,58 +199,36 @@ async function getPostsData(fileNames) {
   );
 }
 
-function parseTemplate(template, data, opts = {extractTags: true}) {
+function parseTemplate(template, data, opts = {extractStyleAndScriptTags: true}) {
   let result = {
     html: template,
     styles: null,
     scripts: null,
   };
 
-  if (opts.extractTags) {
-    const linkRegex = /<link[^>]*rel="stylesheet"[^>]*>/g;
+  /* 
+    This option is used for the first parse before sending data 
+    to parse with the layout file.
+  */
+  if (opts.extractStyleAndScriptTags) {
+    const linkRegex = /<link\s+rel="stylesheet"\s+href="[^"]+"\s*>/g;
     const linkElements = result.html.match(linkRegex) || [];
     result.html = result.html.replace(linkRegex, '').trim();
     result.styles = linkElements.join('\n ');
 
-    const scriptRegex = /<script[^>]*>[\s\S]*?<\/script>/g;
+    const scriptRegex = /<script[^>]*>[^<]*<\/script>/g;
     const scriptElements = result.html.match(scriptRegex) || [];
     result.html = result.html.replace(scriptRegex, '').trim();
     result.scripts = scriptElements.join('\n ');
   }
-  
-  // Handle loops first (before simple replacements)
-  const loopRegex = /\$\{#each\s+(\w+)\}([\s\S]*?)\$\{\/each\}/g;
-  
-  result.html = result.html.replace(loopRegex, (match, arrayName, loopContent) => {
-    const array = data[arrayName];
-    if (!Array.isArray(array)) {
-      console.warn(`\n⚠️  Warning: ${arrayName} is not an array or doesn't exist`);
-      return '';
-    }
-    
-    return array.map(item => {
-      let itemContent = loopContent;
 
-      // Handle conditionals within loops (updated to support if-else)
-      const loopIfElseRegex = /\$\{#if\s+(\w+)\}([\s\S]*?)(?:\$\{else\}([\s\S]*?))?\$\{\/if\}/g;
-      itemContent = itemContent.replace(loopIfElseRegex, (ifMatch, variableName, ifContent, elseContent) => {
-        return item[variableName] ? ifContent : (elseContent || '');
-      });
-
-      // Replace variables within the loop context
-      Object.keys(item).forEach(key => {
-        const regex = new RegExp(`\\$\\{${key}\\}`, 'g');
-        itemContent = itemContent.replace(regex, item[key] || '');
-      });
-      return itemContent;
-    }).join('');
-  });
-
-  // Handle standalone conditionals with if-else support (including nested ones)
-  // Process from innermost to outermost by finding the deepest nesting first
+  /* Handle conditionals (including nested ones).
+    Process from innermost to outermost by finding the deepest nesting first.
+  */
   let hasConditionals = true;
   while (hasConditionals) {
     const conditionalRegex = /\$\{#if\s+(\w+)\}((?:(?!\$\{#if\s+\w+\})[\s\S])*?)(?:\$\{else\}((?:(?!\$\{#if\s+\w+\})[\s\S])*?))?\$\{\/if\}/g;
+    // Array.from is used because matchAll returns an iterator and that has no length
     const matches = Array.from(result.html.matchAll(conditionalRegex));
     
     if (matches.length === 0) {
@@ -251,10 +242,8 @@ function parseTemplate(template, data, opts = {extractTags: true}) {
   
   // Handle simple variable replacements
   Object.keys(data).forEach(key => {
-    if (!Array.isArray(data[key])) { // Skip arrays (already handled above)
-      const regex = new RegExp(`\\$\\{${key}\\}`, 'g');
-      result.html = result.html.replace(regex, data[key] || '');
-    }
+    const regex = new RegExp(`\\$\\{${key}\\}`, 'g');
+    result.html = result.html.replace(regex, data[key] || '');
   });
   
   return result;
