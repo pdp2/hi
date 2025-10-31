@@ -228,7 +228,7 @@ function parseTemplate(template, data, opts = {extractStyleAndScriptTags: true})
   let hasConditionals = true;
   while (hasConditionals) {
     const conditionalRegex = /\$\{#if\s+(\w+)\}((?:(?!\$\{#if\s+\w+\})[\s\S])*?)(?:\$\{else\}((?:(?!\$\{#if\s+\w+\})[\s\S])*?))?\$\{\/if\}/g;
-    // To do: do we need to make an array here?
+    // Array.from is used because matchAll returns an iterator and that has no length
     const matches = Array.from(result.html.matchAll(conditionalRegex));
     
     if (matches.length === 0) {
