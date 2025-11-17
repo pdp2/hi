@@ -7,6 +7,8 @@ const DEFAULT_LAYOUT_CSS_FILEPATH = "./templates/layouts/default/default-layout.
 const DEFAULT_LAYOUT_CSS_OUTPUT_FILEPATH = "./docs/css/default-layout.css";
 const DEFAULT_LAYOUT_JS_FILEPATH = "./templates/layouts/default/default-layout.js";
 const DEFAULT_LAYOUT_JS_OUTPUT_FILEPATH = "./docs/js/default-layout.js";
+const SITE_HEADER_JS_FILEPATH = "./templates/layouts/default/site-header.js";
+const SITE_HEADER_JS_OUTPUT_FILEPATH = "./docs/js/site-header.js";
 
 
 // Index config
@@ -81,6 +83,10 @@ async function addDefaultLayoutStylesAndScripts() {
   defaultTemplateJsFile = defaultTemplateJsFile.replace("/js", "");
   
   await Deno.writeTextFile(DEFAULT_LAYOUT_JS_OUTPUT_FILEPATH, defaultTemplateJsFile);
+  
+  // Copy site header React component
+  const siteHeaderJsFile = await Deno.readTextFile(SITE_HEADER_JS_FILEPATH);
+  await Deno.writeTextFile(SITE_HEADER_JS_OUTPUT_FILEPATH, siteHeaderJsFile);
 }
 
 async function addIndexStylesAndScripts() {
