@@ -24,7 +24,7 @@ scripts/build
 
 ## Writing
 
-Run the watch script, which watches files in the `./posts` folder and triggers a build by running:
+Run the watch script, which watches files in the `./posts` folder and triggers a build, by running:
 
 ```
 scripts/watch
