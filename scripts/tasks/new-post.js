@@ -44,3 +44,12 @@ console.log(`✅ Created new post: ${filepath}\n`);
 console.log(`📝 Title: ${postTitle}\n`);
 console.log(`📅 Date: ${date}`);
 
+try {
+    const command = new Deno.Command("code", {
+        args: [filepath],
+    });
+    await command.output();
+    onsole.log("\n📂 Opening file in Cursor...");
+} catch (error) {
+    console.error(`\n⚠️  Could not open file in Cursor: ${error.message}`);
+}
