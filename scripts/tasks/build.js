@@ -1,5 +1,9 @@
 import { marked } from "npm:marked@^15.0.0";
 import * as path from "jsr:@std/path";
+import { SiteHeader } from "../../js/components/site-header.js";
+
+// Web Components
+const components = [SiteHeader];
 
 // Default config
 const DEFAULT_LAYOUT_TEMPLATE_FILEPATH = "./templates/layouts/default/default-layout.template.html";
@@ -46,16 +50,17 @@ export default async function build() {
   console.info('\n🔍 Found posts data:', postsData);
   
   const postTemplateFile = await Deno.readTextFile(POSTS_TEMPLATE_FILEPATH);
-  const postLayoutFile = await Deno.readTextFile(DEFAULT_LAYOUT_TEMPLATE_FILEPATH);
+  const postLayoutFile = await generateHTMLForWebComponent(await Deno.readTextFile(DEFAULT_LAYOUT_TEMPLATE_FILEPATH));
   await buildPostsFiles(postsData, postTemplateFile, postLayoutFile);
   await addPostStylesAndScripts();
   
   const indexTemplateFile = await Deno.readTextFile(INDEX_TEMPLATE_FILEPATH);
-  const indexLayoutFile = await Deno.readTextFile(DEFAULT_LAYOUT_TEMPLATE_FILEPATH);
+  const indexLayoutFile = await generateHTMLForWebComponent(await Deno.readTextFile(DEFAULT_LAYOUT_TEMPLATE_FILEPATH));
   await buildIndexFile(postsData, indexTemplateFile, postTemplateFile, indexLayoutFile);
   await addIndexStylesAndScripts();
   
   await addDefaultLayoutStylesAndScripts();
+  await copyComponentScripts();
   
   console.info(`\n🎉 Build completed at ${new Date().toISOString()} 🎉\n`);
 }
@@ -245,6 +250,47 @@ function parseTemplate(template, data, opts = {extractStyleAndScriptTags: true})
     const regex = new RegExp(`\\$\\{${key}\\}`, 'g');
     result.html = result.html.replace(regex, data[key] || '');
   });
+  
+  return result;
+}
+
+async function copyComponentScripts() {
+  for (const Component of components) {
+    const sourcePath = `./js/components/${Component.tagName}.js`;
+    const outputDir = './docs/js/components';
+    const outputPath = `${outputDir}/${Component.tagName}.js`;
+    
+    await Deno.mkdir(outputDir, { recursive: true });
+    const componentJs = await Deno.readTextFile(sourcePath);
+    await Deno.writeTextFile(outputPath, componentJs);
+    console.info('\n📦 Copied component:', outputPath);
+  }
+}
+
+async function generateHTMLForWebComponent(html) {
+  let result = html;
+  const componentScriptTags = [];
+  
+  for (const Component of components) {
+    const tagPattern = `<${Component.tagName}></${Component.tagName}>`;
+    
+    // Only process if this component is used in the HTML
+    if (result.includes(tagPattern)) {
+      // Read and extract template content
+      const templateFile = await Deno.readTextFile(Component.templatePath);
+      const templateContentMatch = templateFile.match(/<template[^>]*>([\s\S]*?)<\/template>/);
+      const templateContent = templateContentMatch ? templateContentMatch[1].trim() : '';
+      
+      // Keep the custom element tag so the browser can upgrade it
+      result = result.replaceAll(tagPattern, `<${Component.tagName}>${Component.render(templateContent)}</${Component.tagName}>`);
+      
+      // Add script tag for this component
+      componentScriptTags.push(`<script type="module" src="/js/components/${Component.tagName}.js"></script>`);
+    }
+  }
+  
+  // Replace ${componentScripts} placeholder with actual script tags
+  result = result.replace('${componentScripts}', componentScriptTags.join('\n  '));
   
   return result;
 }
