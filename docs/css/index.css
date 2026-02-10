@@ -1,5 +1,200 @@
+/* Homepage Posts Grid */
 .index_posts {
-  display: grid;
-  grid-gap: 1rem;
-  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xl);
+}
+
+/* Intro section before posts */
+.intro {
+  margin-bottom: var(--space-2xl);
+  padding-bottom: var(--space-2xl);
+  border-bottom: 1px solid var(--border-subtle);
+}
+
+.intro-text {
+  font-size: 1.25rem;
+  color: var(--text-secondary);
+  max-width: 55ch;
+}
+
+.intro-text strong {
+  color: var(--text-primary);
+}
+
+/* Section heading */
+.posts-heading {
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  color: var(--text-muted);
+  margin-bottom: var(--space-lg);
+  display: flex;
+  align-items: center;
+  gap: var(--space-md);
+}
+
+.posts-heading::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, var(--border-subtle), transparent);
+}
+
+/* Post cards on index */
+.index_posts article {
+  background: var(--bg-card);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: var(--space-xl);
+  position: relative;
+  transition: 
+    transform 0.4s var(--ease-out-expo),
+    border-color 0.3s,
+    box-shadow 0.4s var(--ease-out-expo);
+  overflow: hidden;
+}
+
+.index_posts article::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.4s var(--ease-out-expo);
+}
+
+.index_posts article:hover {
+  transform: translateY(-4px);
+  border-color: rgba(232, 168, 73, 0.3);
+  box-shadow: 
+    0 10px 40px -10px rgba(0, 0, 0, 0.5),
+    0 0 0 1px rgba(232, 168, 73, 0.1);
+}
+
+.index_posts article:hover::before {
+  transform: scaleX(1);
+}
+
+/* Post title */
+.index_posts article h2 {
+  margin: 0 0 var(--space-sm) 0;
+  font-size: 1.35rem;
+  line-height: 1.3;
+}
+
+.index_posts article h2 a {
+  color: var(--text-primary);
+  text-decoration: none;
+  transition: color 0.2s;
+}
+
+.index_posts article h2 a:hover {
+  color: var(--accent-primary);
+}
+
+.index_posts article h2 a::after {
+  display: none; /* Remove underline animation on titles */
+}
+
+/* Post date */
+.index_posts article time {
+  display: inline-block;
+  font-family: var(--font-display);
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  margin-bottom: var(--space-md);
+}
+
+/* Post excerpt */
+.index_posts article > p {
+  color: var(--text-secondary);
+  font-size: 0.95rem;
+  line-height: 1.7;
+  margin: 0;
+}
+
+.index_posts article > p p {
+  display: inline;
+  margin: 0;
+}
+
+/* Read more link */
+.index_posts article > p a {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-xs);
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--accent-primary);
+  margin-left: var(--space-sm);
+  transition: gap 0.2s var(--ease-spring);
+}
+
+.index_posts article > p a::after {
+  content: '→';
+  transition: transform 0.2s var(--ease-spring);
+}
+
+.index_posts article > p a:hover {
+  gap: var(--space-sm);
+}
+
+.index_posts article > p a:hover::after {
+  transform: translateX(2px);
+}
+
+/* Post number indicator */
+.index_posts article {
+  counter-increment: post-counter;
+}
+
+.index_posts {
+  counter-reset: post-counter;
+}
+
+/* Stagger animation on load */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.index_posts article {
+  animation: fadeInUp 0.6s var(--ease-out-expo) both;
+}
+
+.index_posts article:nth-child(1) { animation-delay: 0.1s; }
+.index_posts article:nth-child(2) { animation-delay: 0.2s; }
+.index_posts article:nth-child(3) { animation-delay: 0.3s; }
+.index_posts article:nth-child(4) { animation-delay: 0.4s; }
+.index_posts article:nth-child(5) { animation-delay: 0.5s; }
+.index_posts article:nth-child(6) { animation-delay: 0.6s; }
+.index_posts article:nth-child(7) { animation-delay: 0.7s; }
+.index_posts article:nth-child(8) { animation-delay: 0.8s; }
+
+/* Responsive */
+@media (max-width: 640px) {
+  .index_posts article {
+    padding: var(--space-lg);
+  }
+  
+  .index_posts article h2 {
+    font-size: 1.2rem;
+  }
 }
