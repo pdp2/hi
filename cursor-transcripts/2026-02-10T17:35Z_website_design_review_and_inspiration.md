@@ -1,5 +1,5 @@
 # Website design review and inspiration
-_Exported on 10/02/2026 at 17:17:54 GMT from Cursor (2.3.35)_
+_Exported on 10/02/2026 at 17:35:07 GMT from Cursor (2.3.35)_
 
 ---
 
@@ -4612,5 +4612,216 @@ docs/
 ├── elegant-version.html      (16KB)
 ├── index.html                (your actual site)
 └── ...
+```
+
+---
+
+**User**
+
+The actual site still has the elegant version styles. Revert the styles for the main index page.
+
+---
+
+**Cursor**
+
+Let me revert the main site's CSS back to the original styles before my design changes:
+
+Now let me restore all the original styles:
+
+```postcss
+:root {
+  --main-bg: #ebf4fa;
+  --heading-link: #ff8900;
+  --tagline: #017d19;
+  --link: #0083fc;
+}
+
+@font-face {
+  font-family: 'Silkscreen';
+  src: url('../fonts/Silkscreen/Silkscreen-Regular.ttf') format('truetype');
+  font-weight: normal;
+}
+
+@font-face {
+  font-family: 'Silkscreen';
+  src: url('../fonts/Silkscreen/Silkscreen-Bold.ttf') format('truetype');
+  font-weight: bold;
+}
+
+html {
+  background: var(--main-bg);
+  height: 100vh;
+}
+
+body {
+  font-family: Arial, sans-serif;
+  margin: 0 1rem;
+  line-height: 1.5;
+  padding-bottom: 1rem;
+}
+
+a {
+  color: var(--link);
+}
+
+aside {
+  background: #fff2ea;
+  border-radius: 8px;
+  margin-block-start: 1em;
+  margin-block-end: 1em;
+  padding: 0.25rem 0.5rem;
+}
+
+aside::before {
+  content: "Note:";
+  font-weight: bold;
+}
+
+img {
+  max-width: 100%;
+}
+
+@scope (site-header) {
+  .siteHeading {
+    font-family: 'Silkscreen', sans-serif;
+    font-weight: bold;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .siteHeading a {
+    color: var(--heading-link);
+    text-decoration: none;
+  }
+
+  .tagline {
+    color: var(--tagline);
+    margin-top: 0;
+    font-style: italic;
+    font-weight: 600;
+  }
+}
+
+```
+
+```postcss
+.index_posts {
+  display: grid;
+  grid-gap: 1rem;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+}
+
+```
+
+```postcss
+h2 {
+  margin: 0;
+}
+
+article {
+  background: #fff;
+  border-radius: 0.5rem;
+  box-shadow: .3px .5px .7px hsl(var(--shadow-color)/.28),.8px 1.6px 2px -.8px hsl(var(--shadow-color)/.28),1.9px 3.8px 4.8px -1.6px hsl(var(--shadow-color)/.29),4.5px 9.1px 11.6px -2.4px hsl(var(--shadow-color)/.3);
+  max-width: 75ch;
+  padding: 1rem;
+  --shadow-color: 204deg 19% 67%;
+}
+
+.table-container {
+  overflow-x: auto;
+  border: 1px solid #ccc;
+}
+
+table {
+  width: 100%;
+  margin: 1rem 0;
+}
+
+table td {
+  border: 1px solid #e2e8f0;
+  padding: 0.75rem 1rem;
+  text-align: left;
+}
+
+table td:has(del) {
+  background-color: rgb(128 128 128 / 50%);
+  color: rgb(128 128 128);
+  border-color: rgb(128 128 128);
+}
+
+.video-embed {
+  display: flex;
+  justify-content: center;
+}
+
+.video-embed iframe {
+  max-width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+}
+
+```
+
+```html
+<template id="site-header">
+  <h1 class="siteHeading"><a href="/">Paolo Di Pasquale</a></h1>
+  <p class="tagline">Elaborating thoughts on the web</p>
+</template>
+
+```
+
+Now let me rebuild the site to apply the reverted styles:
+
+Done! ✅ The main site has been reverted to its original styles:
+
+- **Light blue background** (`#ebf4fa`)
+- **Silkscreen font** for headings
+- **Orange heading links**, green tagline, blue links
+- **Card grid layout** for posts
+
+Refresh **http://localhost:8080/** to see your original site.
+
+The three design showcase pages remain unchanged with their inlined CSS:
+- `/dark-brown-version.html`
+- `/whimsical-version.html`
+- `/elegant-version.html`
+
+---
+
+**User**
+
+There's an issue with the site header styles.
+
+---
+
+**Cursor**
+
+Let me check the site header component to see what's happening:
+
+I see the issue! The HTML still has the elegant version's header structure (with `.header-content`, `.header-ornament`, etc.) but the CSS expects the original structure (with `.siteHeading`). The template was reverted but the build picked up old content. Let me verify the template and rebuild:
+
+The template file looks correct, but the build might be caching. Let me force a clean rebuild:
+
+Let me verify the generated index.html now has the correct header:
+
+Fixed! ✅ The site header now has the correct original structure:
+
+```html
+<site-header>
+  <h1 class="siteHeading"><a href="/">Paolo Di Pasquale</a></h1>
+  <p class="tagline">Elaborating thoughts on the web</p>
+</site-header>
+```
+
+This matches the CSS which expects `.siteHeading` and `.tagline` classes. Refresh http://localhost:8080/ and the header should now display correctly with:
+- **Silkscreen font** for your name
+- **Orange link** color
+- **Green tagline** in italic
+
+```html
+<site-header>
+  <h1 class="siteHeading"><a href="/">Paolo Di Pasquale</a></h1>
+  <p class="tagline">Elaborating thoughts on the web</p>
+</site-header>
 ```
 
