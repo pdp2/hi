@@ -1,35 +1,21 @@
 import { marked } from "npm:marked@^15.0.0";
-import * as path from "jsr:@std/path";
-import { SiteHeader } from "../../js/components/site-header.js";
+import { SiteHeader } from "../../templates/components/site-header.js";
 
 // Web Components
 const components = [SiteHeader];
 
 // Default config
 const DEFAULT_LAYOUT_TEMPLATE_FILEPATH = "./templates/layouts/default/default-layout.template.html";
-const DEFAULT_LAYOUT_CSS_FILEPATH = "./templates/layouts/default/default-layout.css";
-const DEFAULT_LAYOUT_CSS_OUTPUT_FILEPATH = "./docs/css/default-layout.css";
-const DEFAULT_LAYOUT_JS_FILEPATH = "./templates/layouts/default/default-layout.js";
-const DEFAULT_LAYOUT_JS_OUTPUT_FILEPATH = "./docs/js/default-layout.js";
-
 
 // Index config
 const INDEX_OUTPUT_FILEPATH = "./docs/index.html";
 const INDEX_TEMPLATE_FILEPATH = "./templates/index/index.template.html";
-const INDEX_TEMPLATE_CSS_FILEPATH = "./templates/index/index.css";
-const INDEX_CSS_OUTPUT_FILEPATH = "./docs/css/index.css";
-const INDEX_TEMPLATE_JS_FILEPATH = "./templates/index/index.js";
-const INDEX_JS_OUTPUT_FILEPATH = "./docs/js/index.js";
 const EXCERPT_LENGTH = 250;
 
 // Posts config
 const POSTS_CONTENT_DIR = "./posts";
 const POSTS_OUTPUT_DIR = "./docs/posts";
 const POSTS_TEMPLATE_FILEPATH = "./templates/post/post.template.html";
-const POSTS_TEMPLATE_CSS_FILEPATH = "./templates/post/post.css";
-const POST_CSS_OUTPUT_FILEPATH = "./docs/css/post.css";
-const POST_TEMPLATE_JS_FILEPATH = "./templates/post/post.js";
-const POST_JS_OUTPUT_FILEPATH = "./docs/js/post.js";
 
 const AUTO_RUN_ARG = "--auto-run";
 
@@ -52,64 +38,14 @@ export default async function build() {
   const postTemplateFile = await Deno.readTextFile(POSTS_TEMPLATE_FILEPATH);
   const postLayoutFile = await generateHTMLForWebComponent(await Deno.readTextFile(DEFAULT_LAYOUT_TEMPLATE_FILEPATH));
   await buildPostsFiles(postsData, postTemplateFile, postLayoutFile);
-  await addPostStylesAndScripts();
   
   const indexTemplateFile = await Deno.readTextFile(INDEX_TEMPLATE_FILEPATH);
   const indexLayoutFile = await generateHTMLForWebComponent(await Deno.readTextFile(DEFAULT_LAYOUT_TEMPLATE_FILEPATH));
   await buildIndexFile(postsData, indexTemplateFile, postTemplateFile, indexLayoutFile);
-  await addIndexStylesAndScripts();
   
-  await addDefaultLayoutStylesAndScripts();
   await copyComponentScripts();
   
   console.info(`\n🎉 Build completed at ${new Date().toISOString()} 🎉\n`);
-}
-
-async function addDefaultLayoutStylesAndScripts() {
-  const defaultTemplateCssFile = await Deno.readTextFile(DEFAULT_LAYOUT_CSS_FILEPATH);
-  await Deno.writeTextFile(DEFAULT_LAYOUT_CSS_OUTPUT_FILEPATH, defaultTemplateCssFile);
-  
-  let defaultTemplateJsFile = await Deno.readTextFile(DEFAULT_LAYOUT_JS_FILEPATH);
-
-  // Include imported JS 
-  const importRegex = /import \S+ from "(.+)";/g;
-  const matches = [...defaultTemplateJsFile.matchAll(importRegex)];
-
-  for (const match of matches) {
-    const importPath = match[1];
-    let importedFile = await Deno.readTextFile(importPath);
-    const outputPath = path.normalize(`./docs/${importPath}`);
-    await Deno.mkdir(path.dirname(outputPath), { recursive: true });
-    await Deno.writeTextFile(outputPath, importedFile);
-  }
-
-  defaultTemplateJsFile = defaultTemplateJsFile.replace("/js", "");
-  
-  await Deno.writeTextFile(DEFAULT_LAYOUT_JS_OUTPUT_FILEPATH, defaultTemplateJsFile);
-}
-
-async function addIndexStylesAndScripts() {
-  const indexTemplateCssFile = await Deno.readTextFile(INDEX_TEMPLATE_CSS_FILEPATH);
-  const indexTemplateJsFile = await Deno.readTextFile(INDEX_TEMPLATE_JS_FILEPATH);
-
-  /* To do: If the index template JS file has imports we probably need to do the same thing as the 
-    addDefaultLayoutStylesAndScripts function.
-  */
-
-  await Deno.writeTextFile(INDEX_CSS_OUTPUT_FILEPATH, indexTemplateCssFile);
-  await Deno.writeTextFile(INDEX_JS_OUTPUT_FILEPATH, indexTemplateJsFile);
-}
-
-async function addPostStylesAndScripts() {
-  const postTemplateCssFile = await Deno.readTextFile(POSTS_TEMPLATE_CSS_FILEPATH);
-  const postTemplateJsFile = await Deno.readTextFile(POST_TEMPLATE_JS_FILEPATH);
-
-  /* To do: If the post template JS file has imports we probably need to do the same thing as the 
-    addDefaultLayoutStylesAndScripts function.
-  */
-
-  await Deno.writeTextFile(POST_CSS_OUTPUT_FILEPATH, postTemplateCssFile);
-  await Deno.writeTextFile(POST_JS_OUTPUT_FILEPATH, postTemplateJsFile);
 }
 
 async function buildIndexFile(postsData, indexTemplateFile, postTemplateFile, layoutFile) {
@@ -256,7 +192,7 @@ function parseTemplate(template, data, opts = {extractStyleAndScriptTags: true})
 
 async function copyComponentScripts() {
   for (const Component of components) {
-    const sourcePath = `./js/components/${Component.tagName}.js`;
+    const sourcePath = `./templates/components/${Component.tagName}.js`;
     const outputDir = './docs/js/components';
     const outputPath = `${outputDir}/${Component.tagName}.js`;
     

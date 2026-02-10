@@ -3,7 +3,7 @@ const BaseElement = typeof HTMLElement !== 'undefined' ? HTMLElement : class {};
 
 export class SiteHeader extends BaseElement {
   static tagName = 'site-header';
-  static templatePath = './js/components/site-header.template.html';
+  static templatePath = './templates/components/site-header.template.html';
 
   static render(templateContent) {
     return templateContent;
@@ -18,4 +18,3 @@ export class SiteHeader extends BaseElement {
 if (typeof customElements !== 'undefined') {
   customElements.define(SiteHeader.tagName, SiteHeader);
 }
-
