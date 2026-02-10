@@ -50,21 +50,23 @@ img {
   max-width: 100%;
 }
 
-.siteHeading {
-  font-family: 'Silkscreen', sans-serif;
-  font-weight: bold;
-  line-height: 1;
-  margin-bottom: 0.5rem;
-}
+@scope (site-header) {
+  .siteHeading {
+    font-family: 'Silkscreen', sans-serif;
+    font-weight: bold;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
 
-.siteHeading a {
-  color: var(--heading-link);
-  text-decoration: none;
-}
+  .siteHeading a {
+    color: var(--heading-link);
+    text-decoration: none;
+  }
 
-.tagline {
-  color: var(--tagline);
-  margin-top: 0;
-  font-style: italic;
-  font-weight: 600;
+  .tagline {
+    color: var(--tagline);
+    margin-top: 0;
+    font-style: italic;
+    font-weight: 600;
+  }
 }
