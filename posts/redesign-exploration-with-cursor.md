@@ -47,4 +47,4 @@ Here's [the page](/elegant-version.html) for the last iteration and the screengr
 
 This was the first time I have used Cursor to try out some UI design ideas. In my day-to-day work, I'm using it to change infra settings in terraform or fixing issues with data analytics so it was quite refreshing to use it in this way and I think there are some interesting ideas here that I can use in the design for my actual website too 🙌
 
-🔗 [Link to the full transcript of my chat with Cursor](/cursor-transcripts/2026-02-10T17:35Z_website_design_review_and_inspiration.md)
+🔗 [Link to the full transcript of my chat with Cursor](https://github.com/pdp2/hi/blob/main/cursor-transcripts/2026_02_10T_17_35_website_design_review_and_inspiration.md)
