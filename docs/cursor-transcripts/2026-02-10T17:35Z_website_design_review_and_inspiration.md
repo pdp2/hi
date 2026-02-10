@@ -1,6 +1,8 @@
 # Website design review and inspiration
 _Exported on 10/02/2026 at 17:35:07 GMT from Cursor (2.3.35)_
 
+Model: Opus 4.5
+
 ---
 
 **User**
