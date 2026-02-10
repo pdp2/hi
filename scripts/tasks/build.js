@@ -1,5 +1,5 @@
 import { marked } from "npm:marked@^15.0.0";
-import { SiteHeader } from "../../js/components/site-header.js";
+import { SiteHeader } from "../../templates/components/site-header.js";
 
 // Web Components
 const components = [SiteHeader];
@@ -192,7 +192,7 @@ function parseTemplate(template, data, opts = {extractStyleAndScriptTags: true})
 
 async function copyComponentScripts() {
   for (const Component of components) {
-    const sourcePath = `./js/components/${Component.tagName}.js`;
+    const sourcePath = `./templates/components/${Component.tagName}.js`;
     const outputDir = './docs/js/components';
     const outputPath = `${outputDir}/${Component.tagName}.js`;
     
