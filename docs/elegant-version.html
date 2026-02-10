@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+  <title>Elegant Version | Design Showcase | Paolo Di Pasquale</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,400&family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap');
+
+    :root {
+      /* Refined, warm palette */
+      --bg-primary: #f8f6f1;
+      --bg-secondary: #ffffff;
+      --bg-card: #ffffff;
+      --bg-accent: #2c2c2c;
+      
+      /* Ink & terracotta accent */
+      --accent-primary: #c45c3e;
+      --accent-secondary: #1a1a1a;
+      --accent-muted: #8b7355;
+      
+      /* Text */
+      --text-primary: #1a1a1a;
+      --text-secondary: #4a4a4a;
+      --text-muted: #888888;
+      --text-light: #b0b0b0;
+      
+      /* Links */
+      --link: #c45c3e;
+      --link-hover: #a04830;
+      
+      /* Decorative */
+      --border-subtle: #e8e4dc;
+      --border-dark: #2c2c2c;
+      --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.04);
+      --shadow-hover: 0 8px 40px rgba(0, 0, 0, 0.08);
+      
+      /* Typography */
+      --font-display: 'Cormorant Garamond', Georgia, serif;
+      --font-body: 'DM Sans', system-ui, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+      
+      /* Spacing */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2rem;
+      --space-2xl: 3rem;
+      --space-3xl: 5rem;
+      --space-4xl: 8rem;
+      
+      /* Animation */
+      --ease-elegant: cubic-bezier(0.4, 0, 0.2, 1);
+      --ease-bounce: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--bg-primary);
+      min-height: 100vh;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: 1rem;
+      font-weight: 400;
+      line-height: 1.7;
+      color: var(--text-primary);
+      margin: 0;
+      padding: 0;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* Subtle texture overlay */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 400 400' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)'/%3E%3C/svg%3E");
+      opacity: 0.015;
+      pointer-events: none;
+      z-index: -1;
+    }
+
+    /* Main container */
+    main {
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: var(--space-xl) var(--space-lg);
+      padding-bottom: var(--space-4xl);
+    }
+
+    /* Links */
+    a {
+      color: var(--link);
+      text-decoration: none;
+      transition: all 0.3s var(--ease-elegant);
+    }
+
+    a:hover {
+      color: var(--link-hover);
+    }
+
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-display);
+      font-weight: 400;
+      line-height: 1.2;
+      color: var(--text-primary);
+      letter-spacing: 0.01em;
+    }
+
+    h1 { font-size: clamp(2.5rem, 7vw, 4.5rem); font-weight: 300; }
+    h2 { font-size: clamp(1.5rem, 4vw, 2.25rem); margin-top: var(--space-xl); }
+    h3 { font-size: clamp(1.25rem, 3vw, 1.5rem); }
+
+    /* Paragraphs */
+    p {
+      margin-bottom: var(--space-lg);
+      max-width: 65ch;
+    }
+
+    /* Selection */
+    ::selection {
+      background: var(--accent-primary);
+      color: white;
+    }
+
+    /* Scrollbar - minimal */
+    ::-webkit-scrollbar {
+      width: 6px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-primary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--border-subtle);
+      border-radius: 3px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-muted);
+    }
+
+    /* Site Header */
+    .site-header {
+      display: block;
+      max-width: 72rem;
+      margin: 0 auto;
+      padding: var(--space-4xl) var(--space-lg) var(--space-3xl);
+      text-align: center;
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: var(--space-2xl);
+      position: relative;
+    }
+    
+    .header-content {
+      position: relative;
+      z-index: 1;
+    }
+    
+    /* Decorative top element */
+    .header-ornament {
+      width: 40px;
+      height: 1px;
+      background: var(--text-primary);
+      margin: 0 auto var(--space-xl);
+      position: relative;
+    }
+    
+    .header-ornament::before {
+      content: '✦';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: var(--bg-primary);
+      padding: 0 var(--space-sm);
+      font-size: 0.75rem;
+      color: var(--accent-primary);
+      animation: twinkle 3s ease-in-out infinite;
+    }
+    
+    @keyframes twinkle {
+      0%, 100% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+      50% { opacity: 0.5; transform: translate(-50%, -50%) scale(0.8); }
+    }
+    
+    .greeting {
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.3em;
+      color: var(--text-muted);
+      margin-bottom: var(--space-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: var(--space-md);
+    }
+    
+    .greeting::before,
+    .greeting::after {
+      content: '―';
+      color: var(--text-light);
+    }
+    
+    .wave {
+      display: inline-block;
+      animation: wave 2.5s ease-in-out infinite;
+      transform-origin: 70% 70%;
+    }
+    
+    @keyframes wave {
+      0%, 100% { transform: rotate(0deg); }
+      10% { transform: rotate(14deg); }
+      20% { transform: rotate(-8deg); }
+      30% { transform: rotate(14deg); }
+      40% { transform: rotate(-4deg); }
+      50%, 100% { transform: rotate(0deg); }
+    }
+    
+    .site-name {
+      font-family: var(--font-display);
+      font-size: clamp(2.5rem, 8vw, 4rem);
+      font-weight: 300;
+      color: var(--text-primary);
+      text-decoration: none;
+      display: block;
+      margin-bottom: var(--space-lg);
+      letter-spacing: 0.02em;
+      transition: letter-spacing 0.4s var(--ease-elegant);
+    }
+    
+    .site-name:hover {
+      letter-spacing: 0.06em;
+    }
+    
+    .tagline {
+      font-family: var(--font-display);
+      font-size: 1.125rem;
+      font-style: italic;
+      color: var(--text-secondary);
+      margin: 0;
+      font-weight: 400;
+    }
+    
+    /* Bottom decorative line */
+    .header-line {
+      width: 60px;
+      height: 1px;
+      background: linear-gradient(90deg, transparent, var(--accent-primary), transparent);
+      margin: var(--space-xl) auto 0;
+    }
+
+    /* Gallery-style grid layout */
+    .index_posts {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: var(--space-2xl);
+      counter-reset: gallery;
+    }
+
+    /* Post cards - gallery style */
+    .index_posts article {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      padding: var(--space-2xl);
+      position: relative;
+      text-align: center;
+      transition: all 0.5s var(--ease-elegant);
+      overflow: hidden;
+      counter-increment: gallery;
+    }
+
+    /* Decorative corner */
+    .index_posts article::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 30px;
+      height: 30px;
+      border-top: 1px solid var(--accent-primary);
+      border-left: 1px solid var(--accent-primary);
+      opacity: 0;
+      transition: all 0.4s var(--ease-elegant);
+    }
+
+    .index_posts article::after {
+      content: '';
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 30px;
+      height: 30px;
+      border-bottom: 1px solid var(--accent-primary);
+      border-right: 1px solid var(--accent-primary);
+      opacity: 0;
+      transition: all 0.4s var(--ease-elegant);
+    }
+
+    .index_posts article:hover {
+      transform: translateY(-8px);
+      box-shadow: var(--shadow-hover);
+    }
+
+    .index_posts article:hover::before,
+    .index_posts article:hover::after {
+      opacity: 1;
+    }
+
+    /* Number indicator - like gallery pieces */
+    .index_posts article h2::before {
+      content: '№' counter(gallery);
+      display: block;
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.2em;
+      color: var(--text-light);
+      margin-bottom: var(--space-md);
+    }
+
+    /* Post title with decorative dashes */
+    .index_posts article h2 {
+      margin: 0 0 var(--space-sm) 0;
+      font-size: 1.5rem;
+      font-weight: 400;
+      line-height: 1.3;
+    }
+
+    .index_posts article h2 a {
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+
+    .index_posts article h2 a:hover {
+      color: var(--accent-primary);
+    }
+
+    /* Date - styled like location labels */
+    .index_posts article time {
+      display: block;
+      font-family: var(--font-body);
+      font-size: 0.7rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent-muted);
+      margin-top: var(--space-sm);
+      margin-bottom: var(--space-lg);
+    }
+
+    /* Decorative divider */
+    .index_posts article time::after {
+      content: '';
+      display: block;
+      width: 30px;
+      height: 1px;
+      background: var(--border-subtle);
+      margin: var(--space-md) auto 0;
+    }
+
+    /* Post excerpt */
+    .index_posts article > p {
+      color: var(--text-secondary);
+      font-size: 0.9rem;
+      line-height: 1.7;
+      margin: 0;
+      text-align: left;
+    }
+
+    /* Read more link - minimal */
+    .index_posts article .read-more {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--accent-primary);
+      margin-left: var(--space-sm);
+      position: relative;
+    }
+
+    .index_posts article .read-more::after {
+      content: '→';
+      transition: transform 0.3s var(--ease-bounce);
+    }
+
+    .index_posts article .read-more:hover::after {
+      transform: translateX(4px);
+    }
+
+    /* Stagger animation on load */
+    @keyframes fade-in-up {
+      from {
+        opacity: 0;
+        transform: translateY(40px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .index_posts article {
+      animation: fade-in-up 0.8s var(--ease-elegant) both;
+    }
+
+    .index_posts article:nth-child(1) { animation-delay: 0.1s; }
+    .index_posts article:nth-child(2) { animation-delay: 0.2s; }
+    .index_posts article:nth-child(3) { animation-delay: 0.3s; }
+    .index_posts article:nth-child(4) { animation-delay: 0.4s; }
+    .index_posts article:nth-child(5) { animation-delay: 0.5s; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .index_posts {
+        grid-template-columns: 1fr;
+        gap: var(--space-xl);
+      }
+      
+      .index_posts article {
+        padding: var(--space-xl);
+      }
+      
+      .index_posts article:hover {
+        transform: translateY(-4px);
+      }
+      
+      main {
+        padding: var(--space-lg) var(--space-md);
+      }
+      
+      .site-header {
+        padding: var(--space-3xl) var(--space-md) var(--space-2xl);
+      }
+    }
+
+    /* Large screens - 3 columns */
+    @media (min-width: 1200px) {
+      .index_posts {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    /* Back to home link */
+    .back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-family: var(--font-body);
+      font-size: 0.75rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      margin-bottom: var(--space-2xl);
+      transition: all 0.3s var(--ease-elegant);
+    }
+
+    .back-home::before {
+      content: '←';
+      transition: transform 0.3s var(--ease-bounce);
+    }
+
+    .back-home:hover {
+      color: var(--accent-primary);
+    }
+
+    .back-home:hover::before {
+      transform: translateX(-4px);
+    }
+
+    /* Design label */
+    .design-label {
+      display: inline-block;
+      font-family: var(--font-body);
+      font-size: 0.65rem;
+      font-weight: 500;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent-primary);
+      border: 1px solid var(--accent-primary);
+      padding: var(--space-xs) var(--space-md);
+      margin-bottom: var(--space-lg);
+      margin-left: var(--space-md);
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-content">
+      <div class="header-ornament"></div>
+      <span class="greeting"><span class="wave">👋</span> welcome</span>
+      <a href="/" class="site-name">Paolo Di Pasquale</a>
+      <p class="tagline">Elaborating thoughts on the web</p>
+      <div class="header-line"></div>
+    </div>
+  </header>
+  <main>
+    <a href="/" class="back-home">Back to actual site</a>
+    <span class="design-label">Design Showcase: Elegant Version</span>
+    
+    <div class="index_posts">
+      <article>
+        <h2><a href="#">Start starting, stop stopping</a></h2>
+        <time datetime="2025-12-06T10:42Z">Sat, 06 Dec 2025</time>
+        <p>Oh dear! It has been just over two months since my last post... That wasn't supposed to happen (or not happen). I used to work with an Agile coach, who would quote "Stop starting, start finishing"... <a href="#" class="read-more">Read more</a></p>
+      </article>
+      <article>
+        <h2><a href="#">Ideas, tasks and projects</a></h2>
+        <time datetime="2025-10-05T08:26Z">Sun, 05 Oct 2025</time>
+        <p>I don't recall the specific search term I used, but it must have been related to productivity and organisation because I was looking for tips on how I can be more effective at work... <a href="#" class="read-more">Read more</a></p>
+      </article>
+      <article>
+        <h2><a href="#">The making of this website</a></h2>
+        <time datetime="2025-07-10T11:26Z">Thu, 10 Jul 2025</time>
+        <p>Part of the idea for making my own website was to use it as an opportunity to create my own tools for doing it, and also so I could write about it... <a href="#" class="read-more">Read more</a></p>
+      </article>
+      <article>
+        <h2><a href="#">Just checking I could add another post</a></h2>
+        <time datetime="2025-07-03T11:52Z">Thu, 03 Jul 2025</time>
+        <p>It worked! I'm building my own static site generator (SSG) and I wanted to make sure it was possible to add another post, which it is 🎉</p>
+      </article>
+      <article>
+        <h2><a href="#">Testing, testing, is this thing on?</a></h2>
+        <time datetime="2025-06-23T20:43Z">Mon, 23 Jun 2025</time>
+        <p>This is the first post in my new blog. I am writing into a MD file, which I will later need to convert into HTML for both the entry on the home page and the separate post page... <a href="#" class="read-more">Read more</a></p>
+      </article>
+    </div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="apple-touch-icon" sizes="180x180" href="/favicon/apple-touch-icon.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/favicon/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/favicon/favicon-16x16.png">
+  <title>Dark Brown Version | Design Showcase | Paolo Di Pasquale</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&display=swap');
+
+    :root {
+      /* Dark, warm color palette */
+      --bg-primary: #0d0d0d;
+      --bg-secondary: #1a1614;
+      --bg-card: #1f1b18;
+      --bg-card-hover: #2a2420;
+      
+      /* Accent colors - warm amber/gold */
+      --accent-primary: #e8a849;
+      --accent-secondary: #d4763d;
+      --accent-glow: rgba(232, 168, 73, 0.3);
+      
+      /* Text colors */
+      --text-primary: #f5f0e8;
+      --text-secondary: #a89f94;
+      --text-muted: #6b6259;
+      
+      /* Link colors */
+      --link: #e8a849;
+      --link-hover: #f5c872;
+      --link-visited: #c98c3d;
+      
+      /* Decorative */
+      --border-subtle: rgba(168, 159, 148, 0.15);
+      --gradient-mesh: radial-gradient(ellipse at 20% 0%, rgba(232, 168, 73, 0.08) 0%, transparent 50%),
+                       radial-gradient(ellipse at 80% 100%, rgba(212, 118, 61, 0.06) 0%, transparent 50%),
+                       radial-gradient(ellipse at 50% 50%, rgba(31, 27, 24, 0.9) 0%, transparent 100%);
+      
+      /* Typography */
+      --font-display: 'Syne', system-ui, sans-serif;
+      --font-body: 'Libre Baskerville', Georgia, serif;
+      --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+      
+      /* Spacing */
+      --space-xs: 0.25rem;
+      --space-sm: 0.5rem;
+      --space-md: 1rem;
+      --space-lg: 1.5rem;
+      --space-xl: 2rem;
+      --space-2xl: 3rem;
+      --space-3xl: 4rem;
+      
+      /* Animation */
+      --ease-out-expo: cubic-bezier(0.19, 1, 0.22, 1);
+      --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+    }
+
+    html {
+      background: var(--bg-primary);
+      min-height: 100vh;
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-body);
+      font-size: 1.0625rem;
+      line-height: 1.7;
+      color: var(--text-primary);
+      margin: 0;
+      padding: 0;
+      background: var(--gradient-mesh);
+      background-attachment: fixed;
+      min-height: 100vh;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+
+    /* Animated background particles */
+    body::before {
+      content: '';
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background-image: 
+        radial-gradient(circle at 20% 30%, var(--accent-glow) 0%, transparent 0.5%),
+        radial-gradient(circle at 80% 70%, var(--accent-glow) 0%, transparent 0.3%),
+        radial-gradient(circle at 40% 80%, rgba(212, 118, 61, 0.2) 0%, transparent 0.4%);
+      background-size: 100% 100%;
+      pointer-events: none;
+      z-index: -1;
+      animation: subtle-pulse 8s ease-in-out infinite alternate;
+    }
+
+    @keyframes subtle-pulse {
+      0% { opacity: 0.4; }
+      100% { opacity: 0.7; }
+    }
+
+    /* Main container */
+    main {
+      max-width: 52rem;
+      margin: 0 auto;
+      padding: var(--space-xl) var(--space-lg);
+      padding-bottom: var(--space-3xl);
+    }
+
+    /* Links */
+    a {
+      color: var(--link);
+      text-decoration: none;
+      position: relative;
+      transition: color 0.2s var(--ease-out-expo);
+    }
+
+    a:hover {
+      color: var(--link-hover);
+    }
+
+    /* Headings */
+    h1, h2, h3, h4, h5, h6 {
+      font-family: var(--font-display);
+      font-weight: 700;
+      line-height: 1.2;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+    }
+
+    h1 { font-size: clamp(2rem, 5vw, 3rem); }
+    h2 { font-size: clamp(1.5rem, 4vw, 2rem); margin-top: var(--space-xl); }
+    h3 { font-size: clamp(1.25rem, 3vw, 1.5rem); }
+
+    /* Paragraphs */
+    p {
+      margin-bottom: var(--space-lg);
+      max-width: 65ch;
+    }
+
+    /* Selection */
+    ::selection {
+      background: var(--accent-primary);
+      color: var(--bg-primary);
+    }
+
+    /* Scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+      height: 8px;
+    }
+
+    ::-webkit-scrollbar-track {
+      background: var(--bg-secondary);
+    }
+
+    ::-webkit-scrollbar-thumb {
+      background: var(--text-muted);
+      border-radius: 4px;
+    }
+
+    ::-webkit-scrollbar-thumb:hover {
+      background: var(--text-secondary);
+    }
+
+    /* Site Header */
+    .site-header {
+      display: block;
+      max-width: 52rem;
+      margin: 0 auto;
+      padding: var(--space-2xl) var(--space-lg) var(--space-lg);
+      border-bottom: 1px solid var(--border-subtle);
+      margin-bottom: var(--space-xl);
+      position: relative;
+    }
+    
+    .header-content {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-md);
+    }
+    
+    .site-name {
+      font-family: var(--font-display);
+      font-size: clamp(1.75rem, 4vw, 2.25rem);
+      font-weight: 800;
+      color: var(--text-primary);
+      text-decoration: none;
+      display: inline-block;
+      position: relative;
+      letter-spacing: -0.03em;
+      transition: transform 0.3s var(--ease-spring);
+    }
+    
+    .site-name:hover {
+      transform: translateX(4px);
+      color: var(--accent-primary);
+    }
+    
+    .site-name::before {
+      content: '→';
+      position: absolute;
+      left: -1.5em;
+      opacity: 0;
+      color: var(--accent-primary);
+      transition: opacity 0.3s, transform 0.3s var(--ease-spring);
+      transform: translateX(-8px);
+    }
+    
+    .site-name:hover::before {
+      opacity: 1;
+      transform: translateX(0);
+    }
+    
+    .tagline {
+      font-family: var(--font-body);
+      font-size: 1.125rem;
+      font-style: italic;
+      color: var(--text-secondary);
+      margin: 0;
+      padding-left: 2px;
+    }
+    
+    .greeting {
+      font-family: var(--font-display);
+      font-size: 0.875rem;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      margin-bottom: var(--space-xs);
+    }
+    
+    .header-decor {
+      position: absolute;
+      top: var(--space-xl);
+      right: var(--space-lg);
+      width: 60px;
+      height: 60px;
+      background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+      border-radius: 50%;
+      opacity: 0.1;
+      animation: float 6s ease-in-out infinite;
+    }
+    
+    @keyframes float {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(180deg); }
+    }
+
+    /* Homepage Posts Grid */
+    .index_posts {
+      display: flex;
+      flex-direction: column;
+      gap: var(--space-xl);
+    }
+
+    /* Post cards on index */
+    .index_posts article {
+      background: var(--bg-card);
+      border: 1px solid var(--border-subtle);
+      border-radius: 12px;
+      padding: var(--space-xl);
+      position: relative;
+      transition: 
+        transform 0.4s var(--ease-out-expo),
+        border-color 0.3s,
+        box-shadow 0.4s var(--ease-out-expo);
+      overflow: hidden;
+    }
+
+    .index_posts article::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent-primary), var(--accent-secondary));
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.4s var(--ease-out-expo);
+    }
+
+    .index_posts article:hover {
+      transform: translateY(-4px);
+      border-color: rgba(232, 168, 73, 0.3);
+      box-shadow: 
+        0 10px 40px -10px rgba(0, 0, 0, 0.5),
+        0 0 0 1px rgba(232, 168, 73, 0.1);
+    }
+
+    .index_posts article:hover::before {
+      transform: scaleX(1);
+    }
+
+    /* Post title */
+    .index_posts article h2 {
+      margin: 0 0 var(--space-sm) 0;
+      font-size: 1.35rem;
+      line-height: 1.3;
+    }
+
+    .index_posts article h2 a {
+      color: var(--text-primary);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .index_posts article h2 a:hover {
+      color: var(--accent-primary);
+    }
+
+    /* Post date */
+    .index_posts article time {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-size: 0.8rem;
+      font-weight: 500;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: var(--space-md);
+    }
+
+    /* Post excerpt */
+    .index_posts article > p {
+      color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.7;
+      margin: 0;
+    }
+
+    /* Read more link */
+    .index_posts article .read-more {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-xs);
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--accent-primary);
+      margin-left: var(--space-sm);
+      transition: gap 0.2s var(--ease-spring);
+    }
+
+    .index_posts article .read-more::after {
+      content: '→';
+      transition: transform 0.2s var(--ease-spring);
+    }
+
+    .index_posts article .read-more:hover {
+      gap: var(--space-sm);
+    }
+
+    .index_posts article .read-more:hover::after {
+      transform: translateX(2px);
+    }
+
+    /* Stagger animation on load */
+    @keyframes fadeInUp {
+      from {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .index_posts article {
+      animation: fadeInUp 0.6s var(--ease-out-expo) both;
+    }
+
+    .index_posts article:nth-child(1) { animation-delay: 0.1s; }
+    .index_posts article:nth-child(2) { animation-delay: 0.2s; }
+    .index_posts article:nth-child(3) { animation-delay: 0.3s; }
+    .index_posts article:nth-child(4) { animation-delay: 0.4s; }
+    .index_posts article:nth-child(5) { animation-delay: 0.5s; }
+
+    /* Responsive */
+    @media (max-width: 640px) {
+      .index_posts article {
+        padding: var(--space-lg);
+      }
+      
+      .index_posts article h2 {
+        font-size: 1.2rem;
+      }
+      
+      main {
+        padding: var(--space-lg) var(--space-md);
+      }
+      
+      .site-header {
+        padding: var(--space-xl) var(--space-md) var(--space-md);
+      }
+      
+      .site-name::before {
+        display: none;
+      }
+    }
+
+    /* Back to home link */
+    .back-home {
+      display: inline-flex;
+      align-items: center;
+      gap: var(--space-sm);
+      font-family: var(--font-display);
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--text-muted);
+      margin-bottom: var(--space-xl);
+      transition: color 0.2s;
+    }
+
+    .back-home::before {
+      content: '←';
+      transition: transform 0.2s var(--ease-spring);
+    }
+
+    .back-home:hover {
+      color: var(--accent-primary);
+    }
+
+    .back-home:hover::before {
+      transform: translateX(-4px);
+    }
+
+    /* Design label */
+    .design-label {
+      display: inline-block;
+      font-family: var(--font-display);
+      font-size: 0.7rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.15em;
+      color: var(--accent-primary);
+      background: rgba(232, 168, 73, 0.1);
+      padding: var(--space-xs) var(--space-md);
+      border-radius: 20px;
+      margin-bottom: var(--space-lg);
+    }
+  </style>
+</head>
+<body>
+  <header class="site-header">
+    <div class="header-content">
+      <span class="greeting">👋 Hello, I'm</span>
+      <a href="/" class="site-name">Paolo Di Pasquale</a>
+      <p class="tagline">Elaborating thoughts on the web</p>
+    </div>
+    <div class="header-decor"></div>
+  </header>
+  <main>
+    <a href="/" class="back-home">Back to actual site</a>
+    <span class="design-label">Design Showcase: Dark Brown Version</span>
+    
+    <div class="index_posts">
+      <article>
+        <h2><a href="#">Start starting, stop stopping</a></h2>
+        <time datetime="2025-12-06T10:42Z">Sat, 06 Dec 2025</time>
+        <p>Oh dear! It has been just over two months since my last post... That wasn't supposed to happen (or not happen). I used to work with an Agile coach, who would quote "Stop starting, start finishing"... <a href="#" class="read-more">Read more</a></p>
+      </article>
+      <article>
+        <h2><a href="#">Ideas, tasks and projects</a></h2>
+        <time datetime="2025-10-05T08:26Z">Sun, 05 Oct 2025</time>
+        <p>I don't recall the specific search term I used, but it must have been related to productivity and organisation because I was looking for tips on how I can be more effective at work... <a href="#" class="read-more">Read more</a></p>
+      </article>
+      <article>
+        <h2><a href="#">The making of this website</a></h2>
+        <time datetime="2025-07-10T11:26Z">Thu, 10 Jul 2025</time>
+        <p>Part of the idea for making my own website was to use it as an opportunity to create my own tools for doing it, and also so I could write about it... <a href="#" class="read-more">Read more</a></p>
+      </article>
+      <article>
+        <h2><a href="#">Just checking I could add another post</a></h2>
+        <time datetime="2025-07-03T11:52Z">Thu, 03 Jul 2025</time>
+        <p>It worked! I'm building my own static site generator (SSG) and I wanted to make sure it was possible to add another post, which it is 🎉</p>
+      </article>
+      <article>
+        <h2><a href="#">Testing, testing, is this thing on?</a></h2>
+        <time datetime="2025-06-23T20:43Z">Mon, 23 Jun 2025</time>
+        <p>This is the first post in my new blog. I am writing into a MD file, which I will later need to convert into HTML for both the entry on the home page and the separate post page... <a href="#" class="read-more">Read more</a></p>
+      </article>
+    </div>
+  </main>
+</body>
+</html>
